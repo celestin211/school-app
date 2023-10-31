@@ -5,16 +5,17 @@ namespace App\Entity;
 use App\Interfaces\GenericTraitInterface;
 use App\Repository\UtilisateurRepository;
 use App\Traits\GenericTrait;
-use App\Validator as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use function App\Entity\mb_strtolower;
+use App\Validator as AppAssert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Table(name: 'utilisateur')]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
@@ -80,8 +81,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     #[ORM\Column(name: 'password_requested_at', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $passwordRequestedAt;
 
-    #[ORM\Column(name: 'recevoir_notifications_signac', type: 'boolean')]
-    private ?bool $recevoirNotifSchoolEmail = true;
+    #[ORM\Column(name: 'recevoir_notifications_school', type: 'boolean')]
+    private ?bool $recevoirNotifSchool = true;
 
     #[ORM\Column(name: 'force_change_password', type: 'boolean', nullable: true)]
     private ?bool $forceChangePassword = false;
@@ -92,7 +93,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
 
 
 
-    public function __construct($fileName = null)
+    public function __construct()
     {
         //$this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->enabled = true;
@@ -102,8 +103,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         $this->nbConnexionKO = 0;
         $this->messages = new ArrayCollection();
         $this->dateCreation = new \DateTime();
-        $this->dateModification = new \DateTime();
-
     }
 
     public function getNom(): ?string
@@ -171,12 +170,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         return $this->email;
     }
 
-    public function getRecevoirNotifSchoolEmail(): ?bool
+    public function getRecevoirNotifSchool(): ?bool
     {
         return $this->recevoirNotifSignac;
     }
 
-    public function setRecevoirNotifSchoolEmail(?bool $recevoirNotifSignac): static
+    public function setRecevoirNotifSchool(?bool $recevoirNotifSignac): static
     {
         $this->recevoirNotifSignac = $recevoirNotifSignac;
 
@@ -189,17 +188,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     }
 
     #[ORM\PrePersist]
-    public function initialiazeRecevoirNotifSignac(): void
+    public function initialiazeRecevoirNotifSchool(): void
     {
         // Cette fonction est appelée quand on persiste une entité utilisateur
-        // elle permet d'initialiser le champ recevoirNotifSignac à false si l'utilisateur a un role DGAFP VIP, sinon à true
+        // elle permet d'initialiser le champ recevoirNotifSchool à false si l'utilisateur a un role DGAFP VIP, sinon à true
 
         if (in_array('ROLE_PROFESSEUR', $this->getRoles())) {
             //Les utilisateurs avec le role DGAFP VIP ne recevront pas les notifications de signac par mail par défaut
-            $this->recevoirNotifSignac = false;
+            $this->recevoirNotifSchool = false;
         } else {
             //Les utilisateurs recevront les notifications de signac par mail par défaut
-            $this->recevoirNotifSignac = true;
+            $this->recevoirNotifSchool = true;
         }
     }
 
@@ -521,10 +520,5 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
 
         return $this;
     }
-
-
-
-
-
 
 }
