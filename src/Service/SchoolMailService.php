@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 
-class SIGNACMailer
+class SchoolMailService
 {
     protected $templating;
     protected $em;
