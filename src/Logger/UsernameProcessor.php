@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Logger;
 
 use Monolog\LogRecord;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security;
 
 class UsernameProcessor
 {

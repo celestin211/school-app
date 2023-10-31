@@ -4,8 +4,8 @@ namespace App\Service;
 
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UtilisateurManager

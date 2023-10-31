@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\Agent;
 use App\Entity\Utilisateur;
 use App\Service\RoleService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
-use function Symfony\Component\String\s;
+
 
 class UtilisateurVoter extends Voter
 {

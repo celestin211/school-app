@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Document;
 use App\Entity\DocumentAccueil;
 use App\Repository\DocumentAccueilRepository;
 use Doctrine\ORM\EntityManagerInterface;

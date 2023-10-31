@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\BodyRendererInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 
 class Mailer

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Entity\Utilisateur;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 trait GenericTrait
