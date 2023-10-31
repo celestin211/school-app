@@ -14,9 +14,9 @@ parameters:
     bac.app_version: 3.0.3
     bac.campagne.delaisRappel : 5
     bac.maquette.nbLignesMax: 10000
-    bac.autocomplete: '%env(APP_AUTOCOMPLETE)%'
+    app.autocomplete: '%env(APP_AUTOCOMPLETE)%'
     bac.absolute_url : '%env(APP_ABSOLUTE_URL)%'
-    bac.errors.subject: 'SIGNAC : erreur sur %env(APP_ENVIRONNEMENT)% '
+    bac.errors.subject: 'SCHOOL : erreur sur %env(APP_ENVIRONNEMENT)% '
     app.errors.to_email: [ 'celestin.mombela@yahoo.fr']
     bac.defaultPassword: SCHOOL
     bac.matomo_site_id: '%env(MATOMO_SITE_ID)%'
