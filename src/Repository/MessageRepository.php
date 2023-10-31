@@ -17,13 +17,13 @@ class MessageRepository extends EntityRepository
     // Elle retourne l'ensemble des messages reçus et non lus par l'utilisateur en paramètre
     // Le manager est appelé dans index.base.html afin de mettre à jour la notif des messages
 
-    public function findAllMessagesByUser(Utilisateur $user)
+    public function findAllMessagesByUser(Utilisateur $utilisateur)
     {
         $qb = $this->createQueryBuilder('m')
-                    ->where('m.destinataire = :user')
+                    ->where('m.destinataire = :utilisateur')
                     ->andWhere('m.lu = 0')
                     ->andWhere('m.supprime = 0')
-                    ->setParameter('user', $user)
+                    ->setParameter('utilisateur', $utilisateur)
                     ->orderBy('m.dateEnvoi', 'DESC');
 
         $query = $qb->getQuery();

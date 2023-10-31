@@ -1,104 +1,288 @@
 <!DOCTYPE html>
-<html>
+
+{# Gestion du label rôle en fonction du rôle de l'utilisateur #}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set role = "Administrateur" %}
+{% elseif is_granted('ROLE_DGAFP_VIP') %}
+    {% set role = "DGAFP VIP" %}
+{% elseif is_granted('ROLE_DGAFP') %}
+    {% set role = "DGAFP" %}
+{% elseif is_granted('ROLE_MIN_VAL') %}
+    {% set role = "Valideur" %}
+{% elseif is_granted('ROLE_MIN') %}
+    {% set role = "Gestionnaire" %}
+{% elseif is_granted('ROLE_BT') %}
+    {% set role = "Bureau technique" %}
+{% endif %}
+
+{% set messagesNonLus =  message_manager.getMessagesNonLus() %}
+{% set nbMessagesNonLus = messagesNonLus|length %}
+
+
+{% if app.session.get('rgaaActif', false) == false %}
+    {% set rgaaActif = "" %}
+{% else %}
+    {% set rgaaActif = "rgaa" %}
+{% endif %}
+
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/ico" href="{{ asset('build/images/favicon.ico') }}"/>
-    <title>{% block title %}{{ app_name }} | Connexion{% endblock %}</title>
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>{{ app_name }} | {% block frameTitle %}Accueil{% endblock frameTitle %}</title>
+
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
-    {% endblock stylesheets %}
-
-    {% block javascripts_head %}
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        {#        <!--[if lt IE 9]>
-                {{ encore_entry_script_tags('html5support') }}
-                <![endif]-->#}
-    {% endblock javascripts_head %}
+    {% endblock %}
 
     {% include 'matomo/matomo.html.twig' %}
 </head>
-<body class="login-page">
-<div class="login-box">
-    <div class="login-logo">
-        <span class="logo-main logo-blue">SIGNAC</span>
+<body class="hold-transition skin-blue sidebar-mini {{ rgaaActif }}">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+    <div class="menu-evitement">
+        <a href="#main-content" class="btn btn-primary" title="Accès au contenu de la page">Contenu</a>
+        <a href="#menu_Accueil" class="btn btn-primary" title="Accès au menu">Menu</a>
+        <a href="#cisirh_bacbundle_acteurrecherche_motcle" class="btn btn-primary" title="Accès à la barre de recherche">Recherche</a>
+        <a href="#main-footer" class="btn btn-primary" title="Accès au pied de page">Pied de page</a>
     </div>
-    <div  class="text-center"><p>Version : {{ version }}</p></div>
-    <div class="login-box-body">
-        <p class="login-box-msg">{% block titreFormulaire %}Veuillez vous authentifier{% endblock titreFormulaire %}</p>
 
-        {% for flashMessage in app.session.flashbag.get('notice') %}
-            <div class="alert alert-info alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                {{ flashMessage }}
-            </div>
-        {% endfor %}
+    <header class="main-header" role="banner">
+        <!-- Logo -->
+        <a href="{{ path('bac_homepage') }}" class="logo">
+            <span class="logo-mini">S</span>
+            <span class="logo-main logo-white">SIGNAC</span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
 
-        {% if error.message is defined %}
-            <div class="has-error">
-                <label class="control-label has-error" for="inputError">
-                    <i class="fa fa-times-circle"></i>
-                    {% if error is instanceOfLockedException %}
-                        {{ error.message }},
-                        ou bien contacter l'administrateur sur :
-                        <a href="https://cisirh.service-now.com/" class="text-center">
-                            CISIRH NOW
-                        </a>
-                    {% else %}
-                        {{ error.message|trans(error.messageData, 'security') }}
-                    {% endif %}
-                </label>
-            </div>
-        {% endif %}
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
 
-        {% block form %}
-            <form method="post"> {# autocomplete="on" #}
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
-                <label for="username" class="off-screen">email</label>
-                <div class="form-group has-feedback">
-                    <input type="email" id="username" name="email" value="{{ last_username }}" required="required"
-                           class="form-control" placeholder="Email" autocomplete="{{ autocomplete }}"/>
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-                <label for="password" class="off-screen">mot de passe</label>
-                <div class="form-group has-feedback">
-                    <input type="password" id="password" name="password" required="required" class="form-control"
-                           placeholder="Mot de passe"/>
-                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                </div>
-                <div class="row">
-                    <div class="col-xs-7">
-                        <div class="checkbox icheck">
-                            <label for="alerts">
-                                <input type="checkbox" id="remember_me" name="_remember_me"> Se souvenir de moi
+                    <!------------------- Contrastes renforcés -------------------->
+                    <li class="dropdown tasks-menu">
+                        <div id="contrastes_renforces" class="checkbox toggle-switch switch-success">
+                            <label for="contrastes_renforces_checkbox">
+                                <input id="contrastes_renforces_checkbox" class="disable-icheck" data-switch-no-init="true" type="checkbox" {% if app.session.get('rgaaActif', false) == true %} checked {% endif %} />
+                                <span></span>
+                                <i class="contrastes_renforces_icon fa fa-eye{% if app.session.get('rgaaActif', false) == false %}-slash {% endif %}"></i>  Mode accessibilité
                             </label>
                         </div>
-                    </div><!-- /.col -->
-                    <div class="col-xs-5">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat" id="_submit" name="_submit">Se
-                            connecter
-                        </button>
-                    </div><!-- /.col -->
+                    </li>
+
+                    <!------------------- Messages -------------------->
+                    {% set msgText = '' %}
+                    {% if (nbMessagesNonLus > 0) %}
+                        {% set msgText = (nbMessagesNonLus > 1) ? nbMessagesNonLus ~ ' messages' : nbMessagesNonLus ~ ' message' %}
+                    {% endif %}
+                    <li class="dropdown messages-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{ msgText }}">
+                            <i class="fa fa-envelope-o"></i>
+
+                            <!-- s'il n'y a pas de nouveaux messages, pas la peine d'afficher 0 en notification -->
+                            {% if nbMessagesNonLus > 0 %}
+                                <span class="label label-success">
+                                    {{ nbMessagesNonLus }}
+                                </span>
+                            {% endif %}
+                        </a>
+
+                    </li>
+                    <!-------------------  end messages  -------------------->
+
+
+                    <!-- User Account Menu -->
+                    <li class="dropdown user user-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+                            {% if app.user.civiliteIngres is not null and app.user.civiliteIngres.identifiant ==  constant('App\\EnumTypes\\EnumCiviliteType::MONSIEUR')%}
+                                <img src="{{ asset('build/images/dist/img/avatar5.png') }}" class="user-image" alt=""/>
+                            {% else %}
+                                <img src="{{ asset('build/images/dist/img/avatar3-160x160.jpg') }}" class="user-image"alt=""/>
+                            {% endif %}
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs">{{ app.user.prenom | title}} {{app.user.nom | upper}}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
+                                {% if app.user.civiliteIngres is not null and app.user.civiliteIngres.identifiant ==  constant('App\\EnumTypes\\EnumCiviliteType::MONSIEUR')%}
+                                    <img src="{{ asset('build/images/dist/img/avatar5.png') }}" class="img-circle" alt="" />
+                                {% else %}
+                                    <img src="{{ asset('build/images/dist/img/avatar3-160x160.jpg') }}" class="img-circle" alt="" />
+                                {% endif %}
+                                <p>
+                                    {{ role }}<br>
+                                    {{ app.user.ministere.libelleCourt }}
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <!-- li class="user-body">
+                              <div class="col-xs-4 text-center">
+                                <a href="#">Raccourci 1</a>
+                              </div>
+                              <div class="col-xs-4 text-center">
+                                <a href="#">Raccourci 2</a>
+                              </div>
+                              <div class="col-xs-4 text-center">
+                                <a href="#">Raccourci 3</a>
+                              </div>
+                            </li -->
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="{{ path('utilisateur_profil') }}" class="btn btn-default btn-flat">Profil</a>
+                                </div>
+                                <div class="pull-right">
+                                    {% if(ssoEnabled) %}
+                                        <a href="{{ ssoUrlHome }}" class="btn btn-danger btn-flat">Retour au portail</a>
+                                    {% else %}
+                                        <a href="{{ path('app_logout') }}" class="btn btn-default btn-flat">Déconnexion</a>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+                    <!-- li>
+                      <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    </li -->
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- =============================================== -->
+
+    <!-- Left side column. contains the sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    {% if app.user.civiliteIngres is not null and app.user.civiliteIngres.identifiant ==  constant('App\\EnumTypes\\EnumCiviliteType::MONSIEUR')%}
+                        <img src="{{ asset('build/images/dist/img/avatar5.png') }}" class="img-circle" alt="" />
+                    {% else %}
+                        <img src="{{ asset('build/images/dist/img/avatar3-160x160.jpg') }}" class="img-circle" alt="" />
+                    {% endif %}
                 </div>
-            </form>
-        {% endblock form %}
+                <div class="pull-left info">
+                    <p>{{ app.user.prenom[0:1] | title}}. {{app.user.nom | upper}}</p>
+                    <!-- Status -->
+                    <a href="#" tabindex="-1"><i class="fa fa-circle text-success"></i> Connecté</a>
+                </div>
+            </div>
 
-        {% block pwd_oublie %}
-            <a href="{{ path('demande_reinitialisation_mot_de_passe') }}">Mot de passe oublié</a><br>
-            <a href="https://cisirh.service-now.com/" class="text-center">Demande d'ouverture de compte via CISIRH
-                Now</a>
-        {% endblock pwd_oublie %}
+            <!-- search form -->
+            {{ render(controller('App\\Controller\\AgentController::createSearchForm')) }}
 
-    </div><!-- /.login-box-body -->
-</div><!-- /.login-box -->
-<div id="notifications"
-     data-notifications="{{ app.session.flashbag.get('success') | json_encode|e('html_attr') }}"></div>
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <nav aria-label="Menu principal du site">
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header" aria-hidden="true">Menu</li>
+                    {{ _self.menu_links(app.session.get('menu')) }}
+                </ul>
+            </nav>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- =============================================== -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                {% block pageTitle %}Accueil{% endblock pageTitle %}
+                <small>{% block applicationVersion %}Version {{ version }}{% endblock applicationVersion %}</small>
+            </h1>
+            <ol class="breadcrumb">
+                {% block breadCrumb %}
+
+                    {% if app.session.get('breadCrumb')|length >0 %}
+                        <li><a href="{{ path('bac_homepage') }}"><i class="fa fa-home"></i>Accueil</a></li>
+                    {% else %}
+                        <li class="active"><i class="fa fa-home"></i>Accueil</li>
+                    {% endif %}
+
+                    {% for item in app.session.get('breadCrumb') %}
+                        <li>{{ item['libelle'] }}</li>
+                    {% endfor %}
+
+                {% endblock breadCrumb %}
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <main class="content" role="main" id="main-content">
+            {% block content %}
+            {% endblock content %}
+        </main>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <footer id="main-footer" class="main-footer" role="contentinfo">
+        <!-- To the right -->
+        <div class="pull-right">
+            <a href="{{ path('accessibilite') }}" class="text-bold margin-r-5">Accessibilité</a>
+            <a href="{{ path('page_plan_site') }}" class="text-bold margin-r-5">Plan du site</a>
+            <span class="hidden-xs">{{ "now"|datetime }}</span>
+        </div>
+        <!-- Default to the left -->
+        <strong lang="en">Copyright &copy; {{ "now"|date("Y") }} <a href="#">CISIRH</a>.</strong> Tous droits reservés.
+    </footer>
+</div>
+<!-- ./wrapper -->
+
+<div id="notifications" data-notifications="{{ app.session.flashbag.get('success') | json_encode|e('html_attr') }}"></div>
 <div id="alerts" data-alerts="{{ app.session.flashbag.get('danger') | json_encode|e('html_attr') }}"></div>
+<div id="nb-messages-non-lus" data-nb-messages-non-lus="{{ nbMessagesNonLus }}"></div>
+
+<!-- macros de génération du menu -->
+{% macro menu_links(items) %}
+    {% for item in items %}
+        {% if item['sousMenu'] is null %}
+            {% set href = path(item['href'], item['href_params']) %}
+        {% else %}
+            {% set href = "#" %}
+        {% endif %}
+
+        <li class="{% if item['sousMenu'] is not null%}treeview{% endif %}{% if item['active'] %} active{% endif %}">
+            <a id="menu_{{ item['libelle']|replace({' ': '_'}) }}" href="{{ href }}">
+                <i class='fa {{ item['icone'] }}'></i> <span>{{ item['libelle'] }}</span>
+
+                {% if item['sousMenu'] is not null %}
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                {% endif %}
+            </a>
+
+            {% if item['sousMenu'] is not null %}
+                <ul class="treeview-menu">
+                    {{ _self.menu_links(item['sousMenu']) }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
-{% endblock javascripts %}
+    {{ encore_entry_script_tags('scroll.top') }}
+    {{ encore_entry_script_tags('rgaa') }}
+{% endblock %}
 
 </body>
 </html>

@@ -30,53 +30,44 @@ class UtilisateursData extends Fixture implements FixtureInterface, OrderedFixtu
     {
         $utilisateur1 = new Utilisateur();
         $utilisateur1
-            ->setEmail('bokwala@yahoo.fr')
-            ->setNomPhoto('carte')
-            ->setPath('pblic')
-            ->setNomPhoto('carte')
+            ->setEmail('agathe-bosongo@yahoo.fr')
             ->setCivilite(EnumCiviliteType::MADAME)
             ->setNom('MBEKA')
-            ->setPrenom('SYLVIE')
-            ->setRoles(['ROLE_ADMIN'])
+            ->setPrenom('Agathe')
+            ->setRoles(['ROLE_ELEVE'])
             ->setEnabled(1);
         $utilisateur1->setPassword($this->passwordHasher->hashPassword($utilisateur1, 'babaro211'));
         $manager->persist($utilisateur1);
 
         $utilisateur2 = new Utilisateur();
         $utilisateur2
-            ->setEmail('agathe.mbeka@yahoo.fr')
-            ->setNomPhoto('carte')
-            ->setPath('pblic')
-            ->setCivilite(EnumCiviliteType::MONSIEUR)
-            ->setNom('BOSONGO')
-            ->setPrenom('Agathe')
-            ->setRoles(['ROLE_ADMIN'])
+            ->setEmail('liane-liata@yahoo.fr')
+            ->setCivilite(EnumCiviliteType::MADAME)
+            ->setNom('Liata')
+            ->setPrenom('Liane')
+            ->setRoles(['ROLE_ELEVE'])
             ->setEnabled(1);
         $utilisateur2->setPassword($this->passwordHasher->hashPassword($utilisateur2, 'babaro211'));
         $manager->persist($utilisateur2);
 
         $utilisateur3 = new Utilisateur();
         $utilisateur3
-            ->setEmail('simla.choytun@yahoo.fr')
-            ->setNomPhoto('carte')
-            ->setPath('pblic')
-            ->setCivilite(EnumCiviliteType::MONSIEUR)
-            ->setNom('CHOYTUN')
-            ->setPrenom('Simla')
-            ->setRoles(['ROLE_ADMIN'])
+            ->setEmail('soniachoytun@yahoo.fr')
+            ->setCivilite(EnumCiviliteType::MADAME)
+            ->setNom('Choytun')
+            ->setPrenom('Sonia')
+            ->setRoles(['ROLE_PROFESSEUR'])
             ->setEnabled(1);
         $utilisateur3->setPassword($this->passwordHasher->hashPassword($utilisateur3, 'babaro211'));
         $manager->persist($utilisateur3);
 
         $utilisateur4 = new Utilisateur();
         $utilisateur4
-            ->setEmail('papy.bokoli@yahoo.fr')
-            ->setNomPhoto('carte')
-            ->setPath('pblic')
-            ->setCivilite(EnumCiviliteType::MONSIEUR)
-            ->setNom('MBEKA')
-            ->setPrenom('PAPY')
-            ->setRoles(['ROLE_ADMIN'])
+            ->setEmail('neelah-lazarof@yahoo.fr')
+            ->setCivilite(EnumCiviliteType::MADAME)
+            ->setNom('Lazarof')
+            ->setPrenom('Neelah')
+            ->setRoles(['ROLE_ELEVE'])
             ->setEnabled(1);
         $utilisateur4->setPassword($this->passwordHasher->hashPassword($utilisateur4, 'babaro211'));
 
