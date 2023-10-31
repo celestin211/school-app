@@ -28,7 +28,7 @@ class UtilisateurManager
      */
     private $passwordHasher;
     /**
-     * @var SIGNACMailer
+     * @var SchoolMailService
      */
     private $mailer;
 
@@ -38,7 +38,7 @@ class UtilisateurManager
         EntityManagerInterface $em,
         SecurityManager $securityManager,
         UserPasswordHasherInterface $passwordHasher,
-        SIGNACMailer $mailer
+        SchoolMailService $mailer
     ) {
         $this->excelWriter = $excelWriter;
         $this->roleService = $roleService;

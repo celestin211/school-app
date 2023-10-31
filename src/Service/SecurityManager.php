@@ -20,7 +20,7 @@ class SecurityManager
     /** @var UserPasswordHasherInterface */
     private $passwordHasher;
 
-    /** @var SIGNACMailer */
+    /** @var SchoolMailService */
     private $mailer;
 
     /** @var string */
@@ -42,13 +42,13 @@ class SecurityManager
     private $changePasswordAuthenticator;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface      $entityManager,
         UserPasswordHasherInterface $passwordHasher,
-        SIGNACMailer $mailer,
-        $dureeVieToken,
-        Security $security,
+        SchoolMailService           $mailer,
+                                    $dureeVieToken,
+        Security                    $security,
         ChangePasswordAuthenticator $changePasswordAuthenticator,
-        UserAuthenticatorInterface $authenticator
+        UserAuthenticatorInterface  $authenticator
     ) {
         $this->em = $entityManager;
         $this->passwordHasher = $passwordHasher;
