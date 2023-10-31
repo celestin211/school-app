@@ -1,0 +1,143 @@
+image: int.registry.docker.school-app:5000/docker:sock
+services:
+  - name: docker:dind
+    alias: docker
+    command: ["--insecure-registry=http://int.registry.docker.cisirh:5000" , "--insecure-registry=http://rec.registry.docker.cisirh:5000"]
+
+variables:
+  APP_NAME: "SIGNAC"
+  REGISTRY_NAME: "rec.registry.docker.cisirh"
+  REGISTRY_PORT: "5000"
+  CONTAINER_NAME: "${APP_NAME}_${CI_COMMIT_REF_NAME}"
+  DOCKER_DRIVER: "overlay2"
+  HTTP_PROXY: "http://proxytechnique.prodj.cisirh:8080"
+  HTTPS_PROXY: "http://proxytechnique.prodj.cisirh:8080"
+  http_proxy: "http://proxytechnique.prodj.cisirh:8080"
+  https_proxy: "http://proxytechnique.prodj.cisirh:8080"
+
+stages:
+  - Build
+  - Security
+  - Tests
+  - Quality
+
+################### STAGE 1 - BUILD ##################
+
+build-vendor:
+  image:
+    name: jakzal/phpqa:php8.1
+  stage: Build
+  script:
+    - mv .env.ci .env.local
+    - apt-get update && apt-get install -y --no-install-recommends locales apt-utils git libicu-dev g++ libpng-dev libxml2-dev libzip-dev libonig-dev libxslt-dev unzip vim-tiny iputils-ping
+    - echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+    - echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen
+    - locale-gen
+    - docker-php-ext-configure intl
+    - docker-php-ext-install pdo pdo_mysql intl zip calendar dom mbstring gd xsl
+    - composer install
+  allow_failure: false
+  artifacts:
+    untracked: true
+  tags:
+    - docker
+    - int
+
+
+################### STAGE 2 - SECURITY ##################
+
+security-checker:
+  image:
+    name: jakzal/phpqa:php8.1
+  stage: Security
+  script:
+    - local-php-security-checker  --path=./composer.lock
+  allow_failure: false
+  tags:
+    - docker
+    - int
+
+
+################### STAGE 3 - TESTS ##################
+
+phpunit:
+  image:
+    name: jakzal/phpqa:php8.1
+  stage: Tests
+  before_script:
+    - export PANTHER_NO_HEADLESS=0
+    - export PANTHER_NO_SANDBOX=1
+    - export PANTHER_WEB_SERVER_PORT=9080
+    - vendor/bin/bdi driver:geckodriver
+  script:
+    - php bin/phpunit
+  allow_failure: true
+  dependencies:
+    - build-vendor
+  tags:
+    - docker
+    - int
+
+
+################### STAGE 4 - QUALITY ##################
+
+phpcs:
+  image:
+    name: jakzal/phpqa:php8.1
+  stage: Quality
+  script:
+    - phpcs -v --standard=PSR12 --ignore=./src/Kernel.php ./src
+  allow_failure: true
+  tags:
+    - docker
+    - int
+
+phpstan:
+  image:
+    name: jakzal/phpqa:php8.1
+  stage: Quality
+  script:
+    - phpstan analyse ./src
+  allow_failure: false
+  dependencies:
+    - build-vendor
+  tags:
+    - docker
+    - int
+
+twig-lint:
+  image:
+    name: jakzal/phpqa:php8.1
+  stage: Quality
+  script:
+    - php bin/console lint:twig templates/
+  allow_failure: false
+  tags:
+    - docker
+    - int
+
+sonarqube:
+  image:
+    name: rec.registry.docker.cisirh:5000/cisirh/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: Quality
+  interruptible: true
+  allow_failure: true
+  variables:
+    SONAR_HOST_URL: 'https://sonarqube.cisirh.rie.gouv.fr/'
+    PROXY_HOST: '172.26.100.15'
+    PROXY_PORT: '8080'
+    SONAR_SCANNER_OPTS: '-Dhttps.proxyHost=${PROXY_HOST} -Dhttps.proxyPort=${PROXY_PORT}'
+    SONAR_LOGIN: '25d2504f3e0aa4ce8c5da7e894177f47033428f6'
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.projectVersion=${GET_LAST_TAG} -Dsonar.login=${SONAR_LOGIN}
+  dependencies: []
+  tags:
+    - docker
+    - int
