@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/ico" href="{{ asset('build/images/favicon.ico') }}"/>
+    <title>{% block title %}{{ app_name }} | Connexion{% endblock %}</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock stylesheets %}
+
+    {% block javascripts_head %}
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        {#        <!--[if lt IE 9]>
+                {{ encore_entry_script_tags('html5support') }}
+                <![endif]-->#}
+    {% endblock javascripts_head %}
+
+    {% include 'matomo/matomo.html.twig' %}
+</head>
+<body class="login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <span class="logo-main logo-blue">SIGNAC</span>
+    </div>
+    <div  class="text-center"><p>Version : {{ version }}</p></div>
+    <div class="login-box-body">
+        <p class="login-box-msg">{% block titreFormulaire %}Veuillez vous authentifier{% endblock titreFormulaire %}</p>
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-info alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+
+        {% if error.message is defined %}
+            <div class="has-error">
+                <label class="control-label has-error" for="inputError">
+                    <i class="fa fa-times-circle"></i>
+                    {% if error is instanceOfLockedException %}
+                        {{ error.message }},
+                        ou bien contacter l'administrateur sur :
+                        <a href="https://cisirh.service-now.com/" class="text-center">
+                            CISIRH NOW
+                        </a>
+                    {% else %}
+                        {{ error.message|trans(error.messageData, 'security') }}
+                    {% endif %}
+                </label>
+            </div>
+        {% endif %}
+
+        {% block form %}
+            <form method="post"> {# autocomplete="on" #}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+                <label for="username" class="off-screen">email</label>
+                <div class="form-group has-feedback">
+                    <input type="email" id="username" name="email" value="{{ last_username }}" required="required"
+                           class="form-control" placeholder="Email" autocomplete="{{ autocomplete }}"/>
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <label for="password" class="off-screen">mot de passe</label>
+                <div class="form-group has-feedback">
+                    <input type="password" id="password" name="password" required="required" class="form-control"
+                           placeholder="Mot de passe"/>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-7">
+                        <div class="checkbox icheck">
+                            <label for="alerts">
+                                <input type="checkbox" id="remember_me" name="_remember_me"> Se souvenir de moi
+                            </label>
+                        </div>
+                    </div><!-- /.col -->
+                    <div class="col-xs-5">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat" id="_submit" name="_submit">Se
+                            connecter
+                        </button>
+                    </div><!-- /.col -->
+                </div>
+            </form>
+        {% endblock form %}
+
+        {% block pwd_oublie %}
+            <a href="{{ path('demande_reinitialisation_mot_de_passe') }}">Mot de passe oublié</a><br>
+            <a href="https://cisirh.service-now.com/" class="text-center">Demande d'ouverture de compte via CISIRH
+                Now</a>
+        {% endblock pwd_oublie %}
+
+    </div><!-- /.login-box-body -->
+</div><!-- /.login-box -->
+<div id="notifications"
+     data-notifications="{{ app.session.flashbag.get('success') | json_encode|e('html_attr') }}"></div>
+<div id="alerts" data-alerts="{{ app.session.flashbag.get('danger') | json_encode|e('html_attr') }}"></div>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock javascripts %}
+
+</body>
+</html>
