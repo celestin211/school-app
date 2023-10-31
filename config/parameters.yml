@@ -23,12 +23,6 @@ parameters:
     bac.matomo_host: '%env(default::MATOMO_HOST)%'
     router.request_context.scheme: '%env(ROUTER_SCHEME)%'
     router.request_context.host: '%env(ROUTER_HOST)%'
-    app.url_api_ingres: '%env(URL_API_INGRES)%'
-    app.proxy_ingres_host: '%env(PROXY_INGRES_HOST)%'
-    app.proxy_ingres_port: '%env(PROXY_INGRES_PORT)%'
-    app.ingres_url_to_get_access_token: '%env(INGRES_URL_TO_GET_ACCESS_TOKEN)%'
-    app.ingres_client_secret: '%env(INGRES_CLIENT_SECRET)%'
-    app.ingres_client_id: '%env(INGRES_CLIENT_ID)%'
     app.sso.enabled: '%env(bool:APP_SSO_ENABLED)%'
     app.sso.url_home: '%env(APP_SSO_URL_HOME)%'
 
