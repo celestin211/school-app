@@ -30,6 +30,6 @@ class ConnexionType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'cisirh_bacbundle_connexion';
+        return 'school-teacher';
     }
 }
