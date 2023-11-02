@@ -1,0 +1,139 @@
+$inward-easing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+$outward-easing: cubic-bezier(0.77, 0, 0.175, 1);
+$downward-easing: cubic-bezier(0.47, 0, 0.745, 0.715);
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+}
+
+.container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 32rem;
+    margin: 2rem auto;
+}
+
+.card {
+    padding: 1rem 2rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.flash-activator {
+    appearance: none;
+    border: 0;
+    padding: 1rem 2rem;
+    font-size: 16px;
+    margin-right: 1rem;
+    background-color: #0078bd;
+    color: #ffffff;
+    border-radius: 3px;
+
+}
+
+.flash-container {
+    align-items: center;
+    right: 0;
+    bottom: 2rem;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column-reverse;
+    position: fixed;
+    width: 100%;
+    pointer-events: none;
+    z-index: 100;
+    padding: .75rem;
+}
+
+.flash-message {
+    background: rgba(0, 0, 0, 0.88);
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    cursor: default;
+    display: flex;
+    max-width: 400px;
+    pointer-events: auto;
+    position: relative;
+    font-weight: 400;
+    line-height: 1.25;
++ .flash-message {
+    margin-bottom: .75rem;
+}
+}
+
+.flash-message--error {
+    background: rgba(216, 62, 62, 0.88);
+}
+
+.flash-message__content {
+    margin: 0;
+    padding: 1rem 2rem;
+}
+
+.flash-message__close-button {
+    border-left: 1px solid rgba(255, 255, 255, .2);
+    display: flex;
+.close-button {
+    background: transparent;
+    appearance: none;
+    border: 0;
+    color: rgba(#ffffff, .88);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 1rem 1.25rem;
+}
+
+
+.flash-message--is-animating-in {
+    animation-duration: 0.333333s;
+    animation-name: flashAnimateIn;
+}
+
+.flash-message--is-animating-out {
+    animation-duration: 0.333333s;
+    animation-name: flashAnimateOut;
+}
+
+.flash-message--is-animating-down {
+    animation-duration: 0.333333s;
+    animation-name: flashAnimateDown;
+}
+
+/*================ animations ================*/
+
+@keyframes flashAnimateIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes flashAnimateOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+}
+
+@keyframes flashAnimateDown {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-25%);
+    }
+}
