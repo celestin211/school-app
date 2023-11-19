@@ -1,0 +1,199 @@
+{% extends "Message/index.base.messagerie.html.twig" %}
+
+{% block dossierActive %} {% set dossierActuel = "corbeille" %} {% endblock dossierActive %}
+
+
+
+{% set boiteReceptionClass = "" %}
+{% set favorisClass = "" %}
+{% set corbeilleClass = "active" %}
+
+
+
+{% block content %}
+
+
+
+    <div class="row ">
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+
+                {% block mesDossiers %}
+                    {{ parent() }}
+                {% endblock mesDossiers %}
+
+
+                <!-- /.col -->
+                <div class="col-md-9">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                {% block titre %}
+                                    Corbeille
+                                {% endblock titre %}
+                            </h3>
+
+                            {% block search_mail %}
+                                <div class="box-tools pull-right">
+
+                                    <div class="has-feedback">
+
+                                        {{ render(controller('App\\Controller\\MessageController::createSearchForm')) }}
+                                        <!-- /.search form -->
+
+                                    </div>
+
+                                </div>
+                            {% endblock search_mail %}
+
+                            <!-- /.box-tools -->
+                        </div>
+
+
+                        {{ form_start(form) }}
+
+
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <div class="mailbox-controls">
+                                <!-- Check all button -->
+                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"
+                                        title='Sélectionner tout'><i class="fa fa-square-o"></i>
+                                </button>
+                                <!-- /.btn-group -->
+
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-default btn-sm" title="Restaurer les messages sélectionnés"><i
+                                                class="fa fa-refresh"></i></button>
+                                </div>
+                                <div class="pull-right">
+                                    <b>{{ indicePremierMessage }}-{{ indiceDernierMessage }}</b> sur
+                                    <b>{{ nbMessages }} </b>
+
+                                    <div class="btn-group">
+
+                                        <a href=" {% if page == 1 %} # {% else %} {{ path('message_corbeille' , {"page":page-1})  }} {% endif %}"
+                                           class="btn btn-default btn-sm"
+                                           title="Précédent" {% if page == 1 %} disabled {% endif %}>
+                                            <i class="fa fa-chevron-left"></i>
+                                        </a>
+
+                                        <a href="{% if page == nbPages  or nbPages == 0 %} # {% else %} {{ path('message_corbeille', {"page":page+1}) }} {% endif %} "
+                                           class="btn btn-default btn-sm"
+                                           title="Suivant" {% if page == nbPages  or nbPages == 0 %} disabled {% endif %}>
+                                            <i class="fa fa-chevron-right"></i>
+                                        </a>
+
+                                    </div>
+                                    <!-- /.btn-group -->
+                                </div>
+                                <!-- /.pull-right -->
+                            </div>
+
+
+                            <div class="table-responsive mailbox-messages">
+                                <table class="table table-hover ">
+                                    <tbody>
+                                    {% block messages %}
+                                        {% if messages|length == 0 %}
+
+                                            <tr>
+                                                <td>
+                                                    Aucun message n'a été trouvé dans la corbeille
+                                                </td>
+                                            </tr>
+
+                                        {% else %}
+
+                                            {% for message in messages %}
+                                                <tr class="tr_cliquable" {% if message.lu == 0 %} style="background-color: #f5f3f3;" {% endif %}">
+
+                                                  <td>{{ form_row(form.children["message_"~message.id]) }}</td>
+
+                                                  <td class="mailbox-name"><a href="{{ path('show_message_corbeille', {'id':message.id})}}"> {{ message.expediteur.prenom | title}} {{message.expediteur.nom | upper}}</a></td>
+
+                                                  <td class="mailbox-subject">
+                                                      {% if message.lu == 0 %} <b> {% endif %}
+                                                          <a href="{{ path('show_message_corbeille', {'id':message.id})}}">{{ message.objetMessage | title }} </a>
+                                                      {% if message.lu == 0 %} </b> {% endif %}
+                                                  </td>
+
+                                                   <td class="mailbox-attachment">
+                                                      {% if message.piecesJointes | length > 0 %}
+                                                             <i class="fa fa-paperclip"></i>
+                                                      {% endif %}
+                                                  </td>
+
+                                                  <td class="mailbox-date">
+                                                            {{ message.dateEnvoi |date("m/d/Y H:m")}}
+                                                  </td>
+
+                                                </tr>
+                                            {% endfor %}
+
+                                        {% endif %}
+                                    {% endblock messages %}
+                                    </tbody>
+                                </table>
+                                <!-- /.table -->
+                            </div>
+                            <!-- /.mail-box-messages -->
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer no-padding">
+                            <div class="mailbox-controls">
+                                <!-- Check all button -->
+                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"
+                                        title='Sélectionner tout'><i class="fa fa-square-o"></i>
+                                </button>
+                                <!-- /.btn-group -->
+
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-default btn-sm" title="Restaurer les messages sélectionnés"><i
+                                                class="fa fa-refresh"></i></button>
+                                </div>
+
+                                <div class="pull-right">
+                                    <b>{{ indicePremierMessage }}-{{ indiceDernierMessage }}</b> sur
+                                    <b>{{ nbMessages }} </b>
+
+                                    <div class="btn-group">
+
+                                        <a href="{% if page == 1 %} # {% else %} {{ path('message_corbeille' , {"page":page-1}) }} {% endif %}"
+                                           class="btn btn-default btn-sm"
+                                           title="Précédent" {% if page == 1 %} disabled {% endif %}>
+                                            <i class="fa fa-chevron-left"></i>
+                                        </a>
+
+                                        <a href="{% if page == nbPages  or nbPages == 0 %} # {% else %} {{ path('message_corbeille', {"page":page+1}) }} {% endif %}"
+                                           class="btn btn-default btn-sm"
+                                           title="Suivant" {% if page == nbPages  or nbPages == 0 %} disabled {% endif %}>
+                                            <i class="fa fa-chevron-right"></i>
+                                        </a>
+
+                                    </div>
+                                    <!-- /.btn-group -->
+                                </div>
+                                <!-- /.pull-right -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /. box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+        <!-- /.content-wrapper -->
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock content %}	 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('message.index.corbeille') }}
+{% endblock javascripts %}
