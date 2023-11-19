@@ -1,3 +1,5 @@
+import 'jquery';
+
 (function($) {
 	'use strict';
 	
@@ -807,6 +809,13 @@
 			$("#onload-popup").modal('show', {}, 500);
 		}, 3000);
 		
-	});	
+	});
 	
+	jQuery(document).ready(function() {
+		
+		jQuery(window).load(function() {
+			$(".loader").fadeOut(25000);
+		});
+		
+	});
 })(jQuery);

@@ -1,6 +1,6 @@
-import  "./dataTables/dataTables";
+import  "../dataTables/dataTables";
 import $ from  'jquery';
-import { oLanguage_fr } from "./languages/langue-fr";
+import { oLanguage_fr } from "../languages/langue-fr";
 
 $(function () {
 	// customDatatable('.signac-datatable');
