@@ -17,10 +17,10 @@ const Chat = () => {
 			console.log(`Successfully joined a Room: ${room}`);
 			
 			const videoChatWindow = document.getElementById('video-chat-window');
-			const muteAudio = document.getElementById('muteAudio');
-			const stopVideo = document.getElementById('stopVideo');
+			const muteAudio = 	document.getElementById('muteAudio');
+			const stopVideo = 	document.getElementById('stopVideo');
 			const unmuteAudio = document.getElementById('unmuteAudio');
-			const startVideo = document.getElementById('startVideo');
+			const startVideo = 	document.getElementById('startVideo');
 			
 			startVideo.addEventListener('click', () => {
 				room.localParticipant.videoTracks.forEach(track => {
