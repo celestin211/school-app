@@ -16507,7 +16507,7 @@ pointer-events:none
 }
 .fixed-plugin .card {
 position:fixed!important;
-right:-360px;
+/*right:-360px;*/
 top:0;
 height:100%;
 left:auto!important;
@@ -16542,9 +16542,7 @@ background-image:none;
 border:1px solid #5e72e4;
 color:#5e72e4
 }
-.fixed-plugin.show .card {
-right:0
-}
+
 .input-group {
 border-radius:.5rem
 }

@@ -129,3 +129,46 @@
         transform: translateY(-25%);
     }
 }
+
+
+
+
+.popup a {
+    text-decoration: none;
+}
+.popup-onload {
+    width: 100%;
+    margin: 0 auto;
+    position: fixed;
+    z-index: 10;
+}
+
+.x {
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 400;
+    font-family: "Nunito Sans", sans-serif;
+    text-decoration: none;
+    position: absolute;
+    right: 15px;
+}
+.x:hover {
+    cursor: pointer;
+}
+
+.popup-wrapper {
+    width: 100vw;
+    height: 100vh;
+    background-color: #efefef;
+
+    color: #b18d73;
+    font-size: 2rem;
+    line-height: 1.6;
+    font-weight: 400;
+    font-family: "Nunito Sans", sans-serif;
+    text-align: center;
+}
+
+
+
+

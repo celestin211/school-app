@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+{# Gestion du label rôle en fonction du rôle de l'utilisateur #}
+{% if is_granted('ROLE_MANAGER') %}
+    {% set role = "Professeur" %}
+    {% set role = "ELEVE " %}
+{% elseif is_granted('MANAGER') %}
+
+{% endif %}
+{% set messagesNonLus =  message_manager.getMessagesNonLus(app.user) %}
+{% set nbMessagesNonLus = messagesNonLus|length %}
+
+{% if app.session.get('rgaaActif', false) == false %}
+    {% set rgaaActif = "" %}
+{% else %}
+    {% set rgaaActif = "rgaa" %}
+{% endif %}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('build/images/logo-bosongo.840f550f.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('build/images/logo-bosongo.840f550f.jpg') }}">
+    <title>
+   Clever-School
+    </title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+
+    <!-- Nucleo Icons -->
+    <!-- Font Awesome Icons -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <script src="../../assets/js/plugins/dragula/dragula.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/assets/js/jquery-1.12.4.min.js"></script>
+    <script src="/assets/js/waypoints.min.js"></script>
+    <script src="/assets/js/parallax.js"></script>
+    <script src="/assets/js/jquery.countdown.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/isotope.min.js"></script>
+    <script src="/assets/js/jquery.dd.min.js"></script>
+    <script src="/assets/js/slick.min.js"></script>
+    <script src="/assets/js/jquery.elevatezoom.js"></script>
+    <script src="{{ asset('bundles/tinymce/ext/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('bundles/tinymce/ext/tinymce-webcomponent.js') }}" type="module"></script>
+
+
+
+    <!-- CSS Files -->
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('school-dashboard') }}
+        {{ encore_entry_link_tags('flash-bag-index') }}
+        {{ encore_entry_link_tags('video') }}
+        {{ encore_entry_link_tags('toggle-menu-open') }}
+        {{ encore_entry_link_tags('proscroll') }}
+
+    {% endblock %}
+</head>
+
+<body class="g-sidenav-show   bg-gray-100 hold-transition skin-blue sidebar-mini {{ rgaaActif }}">
+<!--div id="ofBar"><div id="ofBar-logo"> <img alt="creative-tim-logo" src="https://s3.amazonaws.com/creativetim_bucket/static-assets/logo-ct-black.png"></div><div id="ofBar-content"> 🎉🎉 Join Creative Tim's Celebration! <b>10 Years Anniversary Bundle</b> is here, with a big <b>Thank You</b> for your support  ⏰ 3 Days Left</div><div id="ofBar-right"><a href="https://www.creative-tim.com/campaign?ref=ct-demos" target="_blank" id="btn-bar">View Offer</a><a id="close-bar">×</a></div></div-->
+<div class="preloader loaded">
+    <div class="preloader-content">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+<div class="loader preloader loaded" ><span>CLEVER-SCHOOL.</span></div>
+
+<div class='popup-onload'>
+    <div class='popup'>
+        <div id="ofBar"><div id="ofBar-logo"> <img alt="creative-tim-logo" src="{{ asset('build/images/icons8-book-64.png') }}"></div><div id="ofBar-content"> <b>Devenir membre</b> chez School teacher! Get your up to <b>85% OFF treats</b>!</div><div id="ofBar-right"><a href="https://www.creative-tim.com/campaign?ref=ct-demos" target="_blank" id="btn-bar">Get Offer</a><a href='' class="x">x</a></div></div>
+    </div>
+</div>
+
+{% include('shared/aside-nav-bar.html.twig') %}
+
+<!-- Content Header (Page header) -->
+
+<!-- Main content -->
+<main class="main-content position-relative border-radius-lg">
+   {% include('shared/header-nav-bar.html.twig') %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% block content %}
+    {% endblock content %}
+</main>
+<!-- /.content -->
+<!-- Button trigger modal -->
+
+<div id="sideNav">
+    <nav>
+        <div class="fixed-plugin ps show">
+            <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+                <i class="fa fa-cog py-2" aria-hidden="true"> </i>
+            </a>
+            <div class="card shadow-lg">
+                <div class="card-header pb-0 pt-3 bg-transparent ">
+                    <div class="float-start">
+                        <h5 class="mt-3 mb-0">Argon Configurator</h5>
+                        <p>See our dashboard options.</p>
+                    </div>
+                    <div class="float-end mt-4">
+                        <button class="btn btn-link text-dark p-0 fixed-plugin-close-button" id="buttonClose">
+                            <i class="fa fa-close" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                </div>
+                <hr class="horizontal dark my-1">
+                <div class="card-body pt-sm-3 pt-0 overflow-auto">
+
+                    <div>
+                        <h6 class="mb-0">Sidebar Colors</h6>
+                    </div>
+                    <a href="javascript:void(0)" class="switch-trigger background-color">
+                        <div class="badge-colors my-2 text-start">
+                            <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
+                            <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
+                            <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
+                            <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+                            <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+                            <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+                        </div>
+                    </a>
+
+                    <div class="mt-3">
+                        <h6 class="mb-0">Sidenav Type</h6>
+                        <p class="text-sm">Choose between 2 different sidenav types.</p>
+                    </div>
+                    <div class="d-flex">
+                        <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+                        <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
+                    </div>
+                    <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+
+                    <div class="d-flex my-3">
+                        <h6 class="mb-0">Navbar Fixed</h6>
+                        <div class="form-check form-switch ps-0 ms-auto my-auto">
+                            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+                        </div>
+                    </div>
+                    <hr class="horizontal dark mb-1">
+                    <div class="d-flex my-4">
+                        <h6 class="mb-0">Sidenav Mini</h6>
+                        <div class="form-check form-switch ps-0 ms-auto my-auto">
+                            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarMinimize" onclick="navbarMinimize(this)">
+                        </div>
+                    </div>
+                    <hr class="horizontal dark my-sm-4">
+                    <div class="mt-2 mb-5 d-flex">
+                        <h6 class="mb-0">Light / Dark</h6>
+                        <div class="form-check form-switch ps-0 ms-auto my-auto">
+                            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+                        </div>
+                    </div>
+                    <a class="btn btn-primary w-100" href="https://www.creative-tim.com/product/argon-dashboard-pro">Buy now</a>
+                    <a class="btn btn-dark w-100" href="https://www.creative-tim.com/product/argon-dashboard">Free demo</a>
+                    <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/overview/argon-dashboard">View documentation</a>
+                    <div class="w-100 text-center">
+                        <span></span>
+                        <h6 class="mt-3">Thank you for sharing!</h6>
+                        <a href="https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20PRO%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard-pro" class="btn btn-dark mb-0 me-2" target="_blank">
+                            <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard-pro" class="btn btn-dark mb-0 me-2" target="_blank">
+                            <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+
+                </div></div>
+            <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;">
+
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div id="menuBtn">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+        <i class="fa fa-cog py-2"> </i>
+    </a>
+</div>
+<div id="notifications" data-notifications="{{ app.session.flashbag.get('success') | json_encode|e('html_attr') }}">
+
+</div>
+<div id="alerts" data-alerts="{{ app.session.flashbag.get('danger') | json_encode|e('html_attr') }}">
+
+</div>
+<div id="nb-messages-non-lus" data-nb-messages-non-lus="{{ nbMessagesNonLus }}">
+
+</div>
+
+{% macro menu_links(items) %}
+    {% for item in items %}
+        {% if item['sousMenu'] is null %}
+            {% set href = path(item['href'], item['href_params']) %}
+        {% else %}
+            {% set href = "#" %}
+        {% endif %}
+
+        <li class="{% if item['sousMenu'] is not null%}treeview{% endif %}{% if item['active'] %} active{% endif %}">
+            <a id="menu_{{ item['libelle']|replace({' ': '_'}) }}" href="{{ href }}">
+                <i class='fa {{ item['icone'] }}'></i> <span>{{ item['libelle'] }}</span>
+
+                {% if item['sousMenu'] is not null %}
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                {% endif %}
+            </a>
+
+            {% if item['sousMenu'] is not null %}
+                <ul class="treeview-menu">
+                    {{ _self.menu_links(item['sousMenu']) }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('closeelement') }}
+    {{ encore_entry_script_tags('navbar-change') }}
+    {{ encore_entry_script_tags('bootstrap.bundle.min') }}
+    {{ encore_entry_script_tags('bootstrap.min') }}
+    {{ encore_entry_script_tags('popper.min') }}
+    {{ encore_entry_script_tags('bootstrap-notify') }}
+    {{ encore_entry_script_tags('Chart.extension') }}
+    {{ encore_entry_script_tags('chartjs.min') }}
+    {{ encore_entry_script_tags('chartjs.min') }}
+    {{ encore_entry_script_tags('perfect-scrollbar.min') }}
+    {{ encore_entry_script_tags('smooth-scrollbar.min') }}
+    {{ encore_entry_script_tags('nice-alert') }}
+   {{ encore_entry_script_tags('toggle.menu') }}
+   {{ encore_entry_script_tags('ajax-loader') }}
+   {{ encore_entry_script_tags('scripts') }}
+
+
+{% endblock %}
+
+{% include('shared/footer.html.twig') %}
+</body>
+</html>
+
+{% block generationMenu %}
+    {# ----------------------------- #}
+    {# MACRO DE GENERATION DES MENUS #}
+    {# ------------------------------ #}
+    {# macros de génération du menu #}
+
+    {% macro menu_links(items) %}
+        {% for item in items %}
+
+            {% if item['href'] is defined and item['href'] is not null %}
+                {% set href = path(item['href']) %}
+            {% else %}
+                {% set href = "javascript:void(0)" %}
+            {% endif %}
+
+            {% set class="" %}
+            {% set classes="" %}
+
+            {% if item['sousMenu'] %}
+                {% set classes = classes ~ 'treeview ' %}
+            {% endif %}
+
+            {% if item['active'] %}
+                {% set classes = classes ~ 'active' %}
+            {% endif %}
+
+            {% if item['sousMenu'] or item['active'] %}
+                {% set class = "class=\"" ~ classes|trim ~ "\"" %}
+            {% endif %}
+
+            <li {{ class | raw}}>
+                <a id="menu_{{ item['libelle'] }}" href="{{ href }}">
+                    <i class="fa {{ item['icone'] }}"></i> <span>{{ item['libelle'] }}</span>
+                    {% if item['sousMenu'] is not null %}
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    {% endif %}
+                </a>
+
+                {% if item['sousMenu'] is not null %}
+                    <ul class="treeview-menu">
+                        {{ _self.menu_links(item['sousMenu']) }}
+                    </ul>
+                {% endif %}
+            </li>
+
+        {% endfor %}
+    {% endmacro %}
+{% endblock generationMenu %}

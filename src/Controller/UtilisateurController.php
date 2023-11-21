@@ -2,29 +2,24 @@
 
 namespace App\Controller;
 
-use App\Entity\CarteBancaire;
 use App\Entity\Connexion;
 use App\Entity\Utilisateur;
-use App\Form\SearchUtilisateurType;
 use App\Form\Security\ReinitialisationPasswordType;
 use App\Form\UtilisateurType;
 use App\Repository\UtilisateurRepository;
 use App\Security\UtilisateurVoter;
-use App\Service\Paging;
 use App\Service\UtilisateurManager;
 use App\Util\Util;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpOffice\PhpSpreadsheet\Document\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+
 
 /**
  * Utilisateur controller.
@@ -33,46 +28,15 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 class UtilisateurController extends AbstractController
 {
 
-    #[Route(path: '/', name: 'utilisateur', methods: ['GET', 'POST'])]
-    #[Route(path: '/', name: 'Account', methods: ['GET', 'POST'])]
+    /**
+     * Lists all Utilisateur entities.
+     *
+     */
+    #[Route(path: '/', name: 'utilisateur', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(UtilisateurRepository $utilisateurRepository, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator)
+    public function index()
     {
-        // Retrieve the entity manager of Doctrine
-
-        // Get some repository of data, in our case we have an Appointments entity
-        $appointmentsRepository = $entityManager->getRepository(Utilisateur::class);
-
-        // Find all the data on the Appointments table, filter your query as you need
-        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('u')
-            ->where('u.roles != :roles')
-            ->setParameter('roles', 'eneable')
-            ->getQuery();
-
-        // Paginate the results of the query
-        $utilisateurs = $paginator->paginate(
-        // Doctrine Query, not results
-            $allAppointmentsQuery,
-            // Define the page parameter
-            $request->query->getInt('page', 1),
-            // Items per page
-            25);
-
-        $utilisateurs = $utilisateurRepository->findBy(['enabled' => true], ['civilite' => 'desc'], 5);
-
-        $form = $this->createForm(SearchUtilisateurType::class);
-        $search = $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            // On recherche les annonces correspondant aux mots clés
-            $utilisateurs = $utilisateurRepository->searchUtilisateurs(
-                $search->get('mots')->getData(),
-            );
-        }
-        return $this->render('Utilisateur/index.html.twig', [
-            "utilisateurs"=>$utilisateurs,
-            'form' => $form->createView()
-
-        ]);
+        return $this->render('Utilisateur/index.html.twig');
     }
 
     /**
@@ -87,22 +51,6 @@ class UtilisateurController extends AbstractController
         $utilisateur = $this->getUser();
         /*@var $dernieresconnexion Connexion */
         $dernieresConnexions = $em->getRepository(Connexion::class)->derniereConnexionUtilisateurs($utilisateur);
-
-        return $this->render('Utilisateur/show.html.twig', [
-            'utilisateur' => $utilisateur,
-            'dernieresConnexions' => $dernieresConnexions,
-        ]);
-    }
-
-    #[Route(path: 'compte', name: 'compte_show', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function compte(Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
-    {
-        //Voter
-        $utilisateurManager->peutVoir($this->getUser(), $utilisateur);
-
-        /*@var $dernieresconnexion Connexion */
-        $dernieresConnexions = $em->getRepository(CarteBancaire::class)->derniereConnexionUtilisateurs($utilisateur);
 
         return $this->render('Utilisateur/show.html.twig', [
             'utilisateur' => $utilisateur,
@@ -198,7 +146,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/delete', name: 'utilisateur_delete',  methods: ['POST', 'DELETE'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
@@ -247,7 +195,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/activerEtRedefinirPassword', name: 'utilisateur_activer_redefinir_password')]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function activerEtRedefinirPassword(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager)
     {
         $this->denyAccessUnlessGranted(UtilisateurVoter::ACTIVER_ET_REDEFINIR_MOT_DE_PASSE);
@@ -272,7 +220,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/enable', name: 'utilisateur_enable', methods: ['POST', 'PUT'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function enable(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
@@ -300,7 +248,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/disable', name: 'utilisateur_disable', methods: ['POST', 'PUT'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function disable(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
@@ -328,7 +276,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/unlock', name: 'utilisateur_unlock', methods: ['POST', 'PUT'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function unlock(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
@@ -393,7 +341,7 @@ class UtilisateurController extends AbstractController
      */
     #[Route(path: '/update/recevoir_notification', name: 'utilisateur_update_statut_recevoir_notification', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
-    public function updateStatutRecevoirNotificationSIGNAC(AuthorizationCheckerInterface $authorizationChecker, EntityManagerInterface $em)
+    public function updateStatutRecevoirNotificationSchool(AuthorizationCheckerInterface $authorizationChecker, EntityManagerInterface $em)
     {
         $idUser = $_POST['idUtilisateur'];
 
@@ -410,11 +358,11 @@ class UtilisateurController extends AbstractController
         }
 
         //Récupérer le statut actuel : $recevoirNotifSignac
-        $flagActuel = $user->getRecevoirNotifSignac();
+        $flagActuel = $user->getRecevoirNotifSchool();
 
         $newFlag = !$flagActuel;
 
-        $user->setRecevoirNotifSignac($newFlag);
+        $user->setRecevoirNotifSchool($newFlag);
 
         $em->flush();
 
@@ -426,7 +374,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/télécharger', name: 'utilisateurs_extract', methods: ['GET'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function extractUsers(UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         $utilisateurs = $em->getRepository(Utilisateur::class)->getUsersSaufAdmin();
@@ -435,7 +383,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route(path: '/pagination', name: 'pagination', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ELEVE')]
     public function pagination(Request $request, UtilisateurRepository $utilisateurRepository): \Symfony\Component\HttpFoundation\JsonResponse
     {
         $draw = $request->get('draw', 1);
@@ -449,6 +397,8 @@ class UtilisateurController extends AbstractController
         $lignes = $utilisateurRepository->search($search, $start, $length, $order, $this->isGranted('ROLE_ADMIN'));
 
         $recordsFiltered = $utilisateurRepository->searchCount($this->isGranted('ROLE_ADMIN'), $search);
+
+
 
         $data = [];
 

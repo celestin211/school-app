@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Contact;
 use App\Entity\Email;
+use App\Entity\Professeur;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -103,7 +104,7 @@ class Mailer
         return $this->send($email);
     }
 
-    public function sendNotificationEnvoyerDgafp(Arrete $arrete): Email
+    public function sendNotificationEnvoyerDgafp(Professeur $arrete): Email
     {
         $email = new Email(
             $this->emailServiceGreco,
@@ -118,7 +119,7 @@ class Mailer
         return $this->send($email);
     }
 
-    public function sendNotificationRenvoyerMinistere(Arrete $arrete, $sujet, $destinataires, $copies, $corps)
+    public function sendNotificationRenvoyerMinistere(Professeur $arrete, $sujet, $destinataires, $copies, $corps)
     {
         $email = new Email(
             $destinataires,
@@ -135,7 +136,7 @@ class Mailer
         $this->send($email);
     }
 
-    public function sendNotificationAccuserReception(Arrete $arrete, $sujet, $destinataires, $copies, $corps)
+    public function sendNotificationAccuserReception(Professeur $arrete, $sujet, $destinataires, $copies, $corps)
     {
         $email = new Email(
             $destinataires,
@@ -151,7 +152,7 @@ class Mailer
         $this->send($email);
     }
 
-    public function sendNotificationValider(Arrete $arrete, $sujet, $destinataires, $copies, $corps)
+    public function sendNotificationValider(Professeur $arrete, $sujet, $destinataires, $copies, $corps)
     {
         $email = new Email(
             $destinataires,
@@ -168,7 +169,7 @@ class Mailer
         $this->send($email);
     }
 
-    public function sendNotificationDevalider(Arrete $arrete, $sujet, $destinataires, $copies, $corps)
+    public function sendNotificationDevalider(Professeur $arrete, $sujet, $destinataires, $copies, $corps)
     {
         $email = new Email(
             $destinataires,
@@ -185,7 +186,7 @@ class Mailer
         $this->send($email);
     }
 
-    public function sendNotificationValiderTacitement(Arrete $arrete)
+    public function sendNotificationValiderTacitement(Professeur $arrete)
     {
         $destinataires = '';
         $i = 0;
@@ -224,7 +225,7 @@ class Mailer
         $this->send($email);
     }
 
-    public function sendNotificationRejeter(Arrete $arrete, $sujet, $destinataires, $copies, $corps)
+    public function sendNotificationRejeter(Professeur $arrete, $sujet, $destinataires, $copies, $corps)
     {
         $email = new Email(
             $destinataires,

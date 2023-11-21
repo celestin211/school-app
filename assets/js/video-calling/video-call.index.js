@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Video from "twilio-video";
 
+
 const Chat = () => {
 
 	const [roomName, setRoomName] = useState('');
@@ -170,27 +171,61 @@ const Chat = () => {
 						</div>
 						<div className="text-center">
 							<button type="submit" className="btn bg-gradient-dark btn-lg w-100 my-4 mb-2">Entrer</button></div>
-					
 					</form>
 					</div>
 				)}
 				</div>
-				<div id="video-chat-window" className="col-1-video">
-					<button id="muteAudio">Mute</button>
-					<button id="stopVideo">Stop</button>
-					<button id="unmuteAudio">Unmute</button>
-					<button id="startVideo">Play</button>
+		
+	<div id="video-chat-window" className="	row-video">
+	<nav className="tools-kit">
+		
+		<ul className="items-video">
+			<li className="item"><img src="https://i.postimg.cc/L8zxQBhv/live.png" className="active"></img></li>
+			<li className=""><img src="https://i.postimg.cc/JnggC78Q/video.png"></img></li>
+			<li className="item"><img src="https://i.postimg.cc/vmb3JgVy/message.png"></img></li>
+			<li className="item"><img src="https://i.postimg.cc/qR7Q7PwZ/notification.png"></img></li>
+			<li className="item"><img src="https://i.postimg.cc/k4DZH604/users.png"></img></li>
+			<li className="item"><img src="https://i.postimg.cc/v84Fqkyz/setting.png"></img></li>
+		</ul>
+	</nav>
+	<div className="container-video">
+		<div className="row-video">
+			<div className="col-1-video">
+				<img src="https://i.postimg.cc/521rVkhD/image.png" className="host-img"></img>
 					<div className="contarols">
 						<img src="https://i.postimg.cc/3NVtVtgf/chat.png"></img>
-						<img src="https://i.postimg.cc/BQPYHG0r/disconnect.png"></img>
-								<img src="https://i.postimg.cc/fyJH8G00/call.png" className="call-icon"></img>
+							<img src="https://i.postimg.cc/BQPYHG0r/disconnect.png"></img>
+						<img src="https://i.postimg.cc/fyJH8G00/call.png" className="call-icon"></img>
 									<img src="https://i.postimg.cc/bJFgSmFY/mic.png"></img>
 										<img src="https://i.postimg.cc/Y2sDvCJN/cast.png"></img>
+					</div>
+			</div>
+			<div className="col-2-video">
+				<div className="joined">
+					<p>People Joined</p>
+					<div>
+						<img src="https://i.postimg.cc/WzFnG0QG/people-1.png"></img>
+						<img src="https://i.postimg.cc/fRhGbb92/people-2.png"></img>
+						<img src="https://i.postimg.cc/02mgxSbK/people-3.png"></img>
+						<img src="https://i.postimg.cc/K8rd3y7Z/people-4.png"></img>
+						<img src="https://i.postimg.cc/HWFGfzsC/people-5.png"></img>
+					</div>
+				</div>
+				<div className="invite">
+					<p>Invite More People</p>
+					<div>
+						<img src="https://i.postimg.cc/7LHjgQXS/user-1.png"></img>
+						<img src="https://i.postimg.cc/q71SQXZS/user-2.png"></img>
+						<img src="https://i.postimg.cc/h4kwCGpD/user-3.png"></img>
+						<img src="https://i.postimg.cc/GtyfL0hn/user-4.png"></img>
+						<img src="https://i.postimg.cc/FFd8gSbC/user-5.png"></img>
 					</div>
 				</div>
 			</div>
 		</div>
-	)
+	</div>
+	</div></div></div>
+)
 };
 
 export default Chat;

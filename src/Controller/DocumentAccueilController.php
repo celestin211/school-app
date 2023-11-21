@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/document')]
 class DocumentAccueilController extends AbstractController
 {
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_PROEFESSEUR')]
     #[Route(path: '/', name: 'documents_index', methods: ['GET'])]
     public function index(DocumentAccueilManager $documentAccueilManager): Response
     {
@@ -34,7 +34,7 @@ class DocumentAccueilController extends AbstractController
         ]);
     }
 
-    #[IsGranted(new Expression('is_granted("ROLE_ADMIN") or is_granted("ROLE_ADMIN_DGAFP")'))]
+    #[IsGranted(new Expression('is_granted("ROLE_ADMIN") or is_granted("ROLE_PROEFESSEUR")'))]
     #[Route(path: '/new', name: 'documents_new', methods: ['GET', 'POST'])]
     public function new(Request $request, DocumentAccueilManager $documentAccueilManager): RedirectResponse|Response
     {
@@ -44,7 +44,7 @@ class DocumentAccueilController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $documentAccueilManager->save($documentAccueil);
-            $this->addFlash('notice', 'Document enregistré avec succés');
+            $this->addFlash('success', 'Document enregistré avec succés');
 
             return $this->redirectToRoute('documents_index');
         }
@@ -79,7 +79,7 @@ class DocumentAccueilController extends AbstractController
     {
         $documentManager->delete($document);
 
-        $this->addFlash('notice', 'Arrêté supprimé avec succès !');
+        $this->addFlash('success', 'Arrêté supprimé avec succès !');
 
         return $this->redirectToRoute('documents_index');
     }

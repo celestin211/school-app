@@ -2,26 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Manager;
 
-use App\Entity\Arrete;
-use App\Entity\Contact;
 use App\Entity\Cours;
-use App\Entity\Modalite;
-use App\Entity\NbPostesVentile;
-use App\Entity\VoieAccesNbPostesAutreModeIntExt;
-use App\Entity\VoieAccesNbPostesDroitCommun;
+use App\Entity\Contact;
 use App\EnumTypes\EnumStatut;
-use App\Repository\ArreteRepository;
+use App\Repository\CoursRepository;
+use App\Service\DocumentManager;
+use App\Service\Mailer;
 use App\Util\Util;
+use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
 
-class CourManager
+class CoursManager
 {
     /* @var $repository CoursRepository */
     protected $repository;
@@ -66,8 +63,8 @@ class CourManager
             $arrete->setNumNorReference($arrete->getNumNor());
         }
 
-        if ($this->security->getToken() && $this->security->isGranted('ROLE_ADMIN_DGAFP')) {
-            $arrete->setStatut(EnumStatut::TRANSMIS_DGAFP);
+        if ($this->security->getToken() && $this->security->isGranted('ROLE_PROFESSEUR')) {
+            $arrete->setStatut(EnumStatut::TRANSMIS_PROFESSEUR);
             $arrete->setDateTransmission(new \DateTime());
             $arrete->setTransmisPar($utilisateur);
         }
@@ -135,33 +132,33 @@ class CourManager
         $historiqueActions = [];
 
         /* @var Cours $arrete */
-        foreach ($historique as $arrete) {
-            if ($arrete->getDateCreation()) {
-                array_push($historiqueActions, ['statut' => EnumStatut::CREE, 'date' => $arrete->getDateCreation(), 'par' => $arrete->getCreePar(), 'arrete' => $arrete]);
+        foreach ($historique as $cours) {
+            if ($cours->getDateCreation()) {
+                array_push($historiqueActions, ['statut' => EnumStatut::CREE, 'date' => $cours->getDateCreation(), 'par' => $cours->getCreePar(), 'arrete' => $cours]);
             }
 
-            if ($arrete->getDateTransmission()) {
-                array_push($historiqueActions, ['statut' => EnumStatut::TRANSMIS_DGAFP, 'date' => $arrete->getDateTransmission(), 'par' => $arrete->getTransmisPar(), 'arrete' => $arrete]);
+            if ($cours->getDateTransmission()) {
+                array_push($historiqueActions, ['statut' => EnumStatut::TRANSMIS_PROFESSEUR, 'date' => $cours->getDateTransmission(), 'par' => $cours->getTransmisPar(), 'arrete' => $cours]);
             }
 
-            if ($arrete->getDateAccuseReception()) {
-                array_push($historiqueActions, ['statut' => EnumStatut::ACCUSE_RECEPTION, 'date' => $arrete->getDateAccuseReception(), 'par' => $arrete->getAccusePar(), 'arrete' => $arrete]);
+            if ($cours->getDateAccuseReception()) {
+                array_push($historiqueActions, ['statut' => EnumStatut::ACCUSE_RECEPTION, 'date' => $cours->getDateAccuseReception(), 'par' => $cours->getAccusePar(), 'arrete' => $cours]);
             }
 
-            if ($arrete->getDateValidation()) {
-                array_push($historiqueActions, ['statut' => EnumStatut::VALIDE, 'date' => $arrete->getDateValidation(), 'par' => $arrete->getValidePar(), 'arrete' => $arrete]);
+            if ($cours->getDateValidation()) {
+                array_push($historiqueActions, ['statut' => EnumStatut::VALIDE, 'date' => $cours->getDateValidation(), 'par' => $cours->getValidePar(), 'arrete' => $cours]);
             }
 
-            if ($arrete->getDateValidationTacite()) {
-                array_push($historiqueActions, ['statut' => EnumStatut::VALIDE_T, 'date' => $arrete->getDateValidationTacite(), 'par' => null, 'arrete' => $arrete]);
+            if ($cours->getDateValidationTacite()) {
+                array_push($historiqueActions, ['statut' => EnumStatut::VALIDE_T, 'date' => $cours->getDateValidationTacite(), 'par' => null, 'arrete' => $cours]);
             }
 
-            if ($arrete->getDateRejet()) {
-                array_push($historiqueActions, ['statut' => EnumStatut::REJETE, 'date' => $arrete->getDateRejet(), 'par' => $arrete->getRejetePar(), 'arrete' => $arrete]);
+            if ($cours->getDateRejet()) {
+                array_push($historiqueActions, ['statut' => EnumStatut::REJETE, 'date' => $cours->getDateRejet(), 'par' => $cours->getRejetePar(), 'arrete' => $cours]);
             }
 
-            if ($arrete->getDateRetraitAvisConforme()) {
-                array_push($historiqueActions, ['statut' => EnumStatut::AVIS_CONFORME_ANNULE, 'date' => $arrete->getDateRetraitAvisConforme(), 'par' => $arrete->getRetraitAvisConformePar(), 'arrete' => $arrete]);
+            if ($cours->getDateRetraitAvisConforme()) {
+                array_push($historiqueActions, ['statut' => EnumStatut::AVIS_CONFORME_ANNULE, 'date' => $cours->getDateRetraitAvisConforme(), 'par' => $cours->getRetraitAvisConformePar(), 'arrete' => $cours]);
             }
         }
 
@@ -175,29 +172,29 @@ class CourManager
         return $historiqueActions;
     }
 
-    public function arreteIsDerniereVersionValide(Cours $arrete)
+    public function arreteIsDerniereVersionValide(Cours $cours)
     {
         /* @var CoursRepository $repository */
         $repository = $this->em->getRepository(Cours::class);
 
-        /* @var Cours $arreteIsDerniereVersion */
-        $arreteIsDerniereVersion = $repository->findDerniereVersionValideOuNull($arrete);
+        /* @var Cours $coursIsDerniereVersion */
+        $coursIsDerniereVersion = $repository->findDerniereVersionValideOuNull($cours);
 
-        if (!$arreteIsDerniereVersion) {
+        if (!$coursIsDerniereVersion) {
             return false;
         }
 
-        return $arreteIsDerniereVersion->getId() === $arrete->getId();
+        return $coursIsDerniereVersion->getId() === $cours->getId();
     }
 
-    public function isDerniereVersionConcoursSaisie($arrete)
+    public function isDerniereVersionConcoursSaisie($cours)
     {
-        $derniereVersionCoursSaisie = $this->em->getRepository(Cours::class)->findDerniereVersionConcoursSaisie($arrete);
+        $derniereVersionCoursSaisie = $this->em->getRepository(Cours::class)->findDerniereVersionConcoursSaisie($cours);
 
-        return null === $derniereVersionCoursSaisie || $derniereVersionCoursSaisie->getId() === $arrete->getId();
+        return null === $derniereVersionCoursSaisie || $derniereVersionCoursSaisie->getId() === $cours->getId();
     }
 
-    public function creerFromArrete(Cours $arrete)
+    public function creerFromArrete(Cours $cours)
     {
         //-------------------------------------------
         //On prealimente les données du nouvel arreté
@@ -208,98 +205,98 @@ class CourManager
 
         //Référence
         //---------
-        if ($arrete->getCoursReference()) {
-            $newCours->setCoursReference($arrete->getCoursReference());
+        if ($cours->getCoursReference()) {
+            $newCours->setCoursReference($cours->getCoursReference());
         } else {
-            $newCours->setCoursReference($arrete);
+            $newCours->setCoursReference($cours);
         }
 
         $newCours->setNumNorReference($newCours->getCoursReference()->getNumNor());
 
-        $newCours->setTypePostes($arrete->isTypePostes());
-        $newCours->setDirection($arrete->getDirection());
-        $newCours->setCorps($arrete->getCorps());
-        $newCours->setGrade($arrete->getGrade());
-        $newCours->setCategorie(($arrete->getCategorie()));
-        $newCours->setAnneeConcours($arrete->getAnneeConcours());
+        $newCours->setTypePostes($cours->isTypePostes());
+        $newCours->setDirection($cours->getDirection());
+        $newCours->setCorps($cours->getCorps());
+        $newCours->setGrade($cours->getGrade());
+        $newCours->setCategorie(($cours->getCategorie()));
+        $newCours->setAnneeConcours($cours->getAnneeConcours());
 
         // La date de Visa CBCM ne doit pas être reprise
-        if ($arrete->isTypePostes()) {
-            $newCours->setDateVisaControleFinancier($arrete->getDateVisaControleFinancier());
+        if ($cours->isTypePostes()) {
+            $newCours->setDateVisaControleFinancier($cours->getDateVisaControleFinancier());
         }
 
         //Lieux & Dates
         //-------------
-        $newCours->setLieuConcours($arrete->getLieuConcours());
-        $newCours->setDateOuverture($arrete->getDateOuverture());
-        $newCours->setDateRetraitDossiers($arrete->getDateRetraitDossiers());
-        $newCours->setDateClotureInscriptionsCourrier($arrete->getDateClotureInscriptionsCourrier());
-        $newCours->setDateClotureInscriptionsWeb($arrete->getDateClotureInscriptionsWeb());
-        $newCours->setDatePremiereEpreuve($arrete->getDatePremiereEpreuve());
+        $newCours->setLieuConcours($cours->getLieuConcours());
+        $newCours->setDateOuverture($cours->getDateOuverture());
+        $newCours->setDateRetraitDossiers($cours->getDateRetraitDossiers());
+        $newCours->setDateClotureInscriptionsCourrier($cours->getDateClotureInscriptionsCourrier());
+        $newCours->setDateClotureInscriptionsWeb($cours->getDateClotureInscriptionsWeb());
+        $newCours->setDatePremiereEpreuve($cours->getDatePremiereEpreuve());
 
         //Modalités
         //---------
         $modalite = new Modalite();
-        $modalite->setCommun($arrete->getModalite()->isCommun());
-        $modalite->setNational($arrete->getModalite()->isNational());
-        $modalite->setNationalAffectationLocale($arrete->getModalite()->isNationalAffectationLocale());
-        $modalite->setDeconcentre($arrete->getModalite()->isDeconcentre());
-        $modalite->setSurTitres($arrete->getModalite()->isSurTitres());
-        $modalite->setSpecialiteEmploiType($arrete->getModalite()->isSpecialiteEmploiType());
-        $modalite->setAutres($arrete->getModalite()->isAutres());
-        $modalite->setAutresModalites($arrete->getModalite()->getAutresModalites());
+        $modalite->setCommun($cours->getModalite()->isCommun());
+        $modalite->setNational($cours->getModalite()->isNational());
+        $modalite->setNationalAffectationLocale($cours->getModalite()->isNationalAffectationLocale());
+        $modalite->setDeconcentre($cours->getModalite()->isDeconcentre());
+        $modalite->setSurTitres($cours->getModalite()->isSurTitres());
+        $modalite->setSpecialiteEmploiType($cours->getModalite()->isSpecialiteEmploiType());
+        $modalite->setAutres($cours->getModalite()->isAutres());
+        $modalite->setAutresModalites($cours->getModalite()->getAutresModalites());
         $newCours->setModalite($modalite);
 
         //Voies d'accès Droit
         //-------------------
         $voieAccesDroitCommun = new VoieAccesNbPostesDroitCommun();
-        $voieAccesDroitCommun->setExterne($arrete->getVoieAccesNbPostesDroitCommun()->getExterne());
-        $voieAccesDroitCommun->setNbExterne($arrete->getVoieAccesNbPostesDroitCommun()->getNbExterne());
-        $voieAccesDroitCommun->setInterne($arrete->getVoieAccesNbPostesDroitCommun()->getInterne());
-        $voieAccesDroitCommun->setNbInterne($arrete->getVoieAccesNbPostesDroitCommun()->getNbInterne());
-        $voieAccesDroitCommun->setTroisiemeConcours($arrete->getVoieAccesNbPostesDroitCommun()->getTroisiemeConcours());
-        $voieAccesDroitCommun->setNbTroisiemeConcours($arrete->getVoieAccesNbPostesDroitCommun()->getNbTroisiemeConcours());
-        $voieAccesDroitCommun->setUnik($arrete->getVoieAccesNbPostesDroitCommun()->getUnik());
-        $voieAccesDroitCommun->setNbUnik($arrete->getVoieAccesNbPostesDroitCommun()->getNbUnik());
-        $voieAccesDroitCommun->setExapro($arrete->getVoieAccesNbPostesDroitCommun()->getExapro());
-        $voieAccesDroitCommun->setNbExapro($arrete->getVoieAccesNbPostesDroitCommun()->getNbExapro());
-        $voieAccesDroitCommun->setSansConcoursExterne($arrete->getVoieAccesNbPostesDroitCommun()->getSansConcoursExterne());
-        $voieAccesDroitCommun->setNbSansConcoursExterne($arrete->getVoieAccesNbPostesDroitCommun()->getNbSansConcoursExterne());
-        $voieAccesDroitCommun->setPacte($arrete->getVoieAccesNbPostesDroitCommun()->getPacte());
-        $voieAccesDroitCommun->setNbPacte($arrete->getVoieAccesNbPostesDroitCommun()->getNbPacte());
-        $voieAccesDroitCommun->setSelectionProfessionnelle($arrete->getVoieAccesNbPostesDroitCommun()->getSelectionProfessionnelle());
-        $voieAccesDroitCommun->setNbSelectionProfessionnelle($arrete->getVoieAccesNbPostesDroitCommun()->getNbSelectionProfessionnelle());
-        $voieAccesDroitCommun->setConcoursSpecial($arrete->getVoieAccesNbPostesDroitCommun()->getConcoursSpecial());
-        $voieAccesDroitCommun->setNbConcoursSpecial($arrete->getVoieAccesNbPostesDroitCommun()->getNbConcoursSpecial());
-        $voieAccesDroitCommun->setNatureConcours($arrete->getVoieAccesNbPostesDroitCommun()->getNatureConcours());
+        $voieAccesDroitCommun->setExterne($cours->getVoieAccesNbPostesDroitCommun()->getExterne());
+        $voieAccesDroitCommun->setNbExterne($cours->getVoieAccesNbPostesDroitCommun()->getNbExterne());
+        $voieAccesDroitCommun->setInterne($cours->getVoieAccesNbPostesDroitCommun()->getInterne());
+        $voieAccesDroitCommun->setNbInterne($cours->getVoieAccesNbPostesDroitCommun()->getNbInterne());
+        $voieAccesDroitCommun->setTroisiemeConcours($cours->getVoieAccesNbPostesDroitCommun()->getTroisiemeConcours());
+        $voieAccesDroitCommun->setNbTroisiemeConcours($cours->getVoieAccesNbPostesDroitCommun()->getNbTroisiemeConcours());
+        $voieAccesDroitCommun->setUnik($cours->getVoieAccesNbPostesDroitCommun()->getUnik());
+        $voieAccesDroitCommun->setNbUnik($cours->getVoieAccesNbPostesDroitCommun()->getNbUnik());
+        $voieAccesDroitCommun->setExapro($cours->getVoieAccesNbPostesDroitCommun()->getExapro());
+        $voieAccesDroitCommun->setNbExapro($cours->getVoieAccesNbPostesDroitCommun()->getNbExapro());
+        $voieAccesDroitCommun->setSansConcoursExterne($cours->getVoieAccesNbPostesDroitCommun()->getSansConcoursExterne());
+        $voieAccesDroitCommun->setNbSansConcoursExterne($cours->getVoieAccesNbPostesDroitCommun()->getNbSansConcoursExterne());
+        $voieAccesDroitCommun->setPacte($cours->getVoieAccesNbPostesDroitCommun()->getPacte());
+        $voieAccesDroitCommun->setNbPacte($cours->getVoieAccesNbPostesDroitCommun()->getNbPacte());
+        $voieAccesDroitCommun->setSelectionProfessionnelle($cours->getVoieAccesNbPostesDroitCommun()->getSelectionProfessionnelle());
+        $voieAccesDroitCommun->setNbSelectionProfessionnelle($cours->getVoieAccesNbPostesDroitCommun()->getNbSelectionProfessionnelle());
+        $voieAccesDroitCommun->setConcoursSpecial($cours->getVoieAccesNbPostesDroitCommun()->getConcoursSpecial());
+        $voieAccesDroitCommun->setNbConcoursSpecial($cours->getVoieAccesNbPostesDroitCommun()->getNbConcoursSpecial());
+        $voieAccesDroitCommun->setNatureConcours($cours->getVoieAccesNbPostesDroitCommun()->getNatureConcours());
         $newCours->setVoieAccesNbPostesDroitCommun($voieAccesDroitCommun);
 
         //Voies d 'accès Autres
         //---------------------
         $voieAccesAutreInterneExterne = new VoieAccesNbPostesAutreModeIntExt();
-        $voieAccesAutreInterneExterne->setAutres($arrete->getVoieAccesNbPostesAutreModeIntExt()->getAutres());
-        $voieAccesAutreInterneExterne->setNbAutres($arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbAutres());
-        $voieAccesAutreInterneExterne->setNatureConcours($arrete->getVoieAccesNbPostesAutreModeIntExt()->getNatureConcours());
-        $voieAccesAutreInterneExterne->setConcoursReserve($arrete->getVoieAccesNbPostesAutreModeIntExt()->getConcoursReserve());
-        $voieAccesAutreInterneExterne->setNbConcoursReserve($arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbConcoursReserve());
-        $voieAccesAutreInterneExterne->setSansConcoursInterneReserve($arrete->getVoieAccesNbPostesAutreModeIntExt()->getSansConcoursInterneReserve());
-        $voieAccesAutreInterneExterne->setNbSansConcoursInterneReserve($arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbSansConcoursInterneReserve());
-        $voieAccesAutreInterneExterne->setExamenProReserve($arrete->getVoieAccesNbPostesAutreModeIntExt()->getExamenProReserve());
-        $voieAccesAutreInterneExterne->setNbExamenProReserve($arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbExamenProReserve());
-        $voieAccesAutreInterneExterne->setInterneExcept($arrete->getVoieAccesNbPostesAutreModeIntExt()->getInterneExcept());
-        $voieAccesAutreInterneExterne->setNbInterneExcept($arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbInterneExcept());
+        $voieAccesAutreInterneExterne->setAutres($cours->getVoieAccesNbPostesAutreModeIntExt()->getAutres());
+        $voieAccesAutreInterneExterne->setNbAutres($cours->getVoieAccesNbPostesAutreModeIntExt()->getNbAutres());
+        $voieAccesAutreInterneExterne->setNatureConcours($cours->getVoieAccesNbPostesAutreModeIntExt()->getNatureConcours());
+        $voieAccesAutreInterneExterne->setConcoursReserve($cours->getVoieAccesNbPostesAutreModeIntExt()->getConcoursReserve());
+        $voieAccesAutreInterneExterne->setNbConcoursReserve($cours->getVoieAccesNbPostesAutreModeIntExt()->getNbConcoursReserve());
+        $voieAccesAutreInterneExterne->setSansConcoursInterneReserve($cours->getVoieAccesNbPostesAutreModeIntExt()->getSansConcoursInterneReserve());
+        $voieAccesAutreInterneExterne->setNbSansConcoursInterneReserve($cours->getVoieAccesNbPostesAutreModeIntExt()->getNbSansConcoursInterneReserve());
+        $voieAccesAutreInterneExterne->setExamenProReserve($cours->getVoieAccesNbPostesAutreModeIntExt()->getExamenProReserve());
+        $voieAccesAutreInterneExterne->setNbExamenProReserve($cours->getVoieAccesNbPostesAutreModeIntExt()->getNbExamenProReserve());
+        $voieAccesAutreInterneExterne->setInterneExcept($cours->getVoieAccesNbPostesAutreModeIntExt()->getInterneExcept());
+        $voieAccesAutreInterneExterne->setNbInterneExcept($cours->getVoieAccesNbPostesAutreModeIntExt()->getNbInterneExcept());
         $newCours->setVoieAccesNbPostesAutreModeIntExt($voieAccesAutreInterneExterne);
 
         //NbPostes
         //--------
-        $newCours->setNbPostesTH($arrete->getNbPostesTH());
-        $newCours->setNbPostesACVG($arrete->getNbPostesACVG());
+        $newCours->setNbPostesTH($cours->getNbPostesTH());
+        $newCours->setNbPostesACVG($cours->getNbPostesACVG());
 
         //Commun : Répartition NbPostes
         //-----------------------------
         //Vide la collection au cas où
         $newCours->clearNbPostesVentiles();
-        $allNbPostesVentiles = $arrete->getNbPostesVentiles();
+        $allNbPostesVentiles = $cours->getNbPostesVentiles();
 
         /* @var $allNbPostesVentile NbPostesVentile */
         foreach ($allNbPostesVentiles as $allNbPostesVentile) {
@@ -329,7 +326,7 @@ class CourManager
             $newCours->addNbPostesVentile($nbpostesVentileMinistere);
         }
 
-        $newCours->setCommentaire($arrete->getCommentaire());
+        $newCours->setCommentaire($cours->getCommentaire());
 
         // Les contacts ne doivents pas être repris
         $utilisateur = $this->security->getUser();
@@ -340,13 +337,13 @@ class CourManager
             $newCours->addContact($contact);
         }
 
-        foreach ($arrete->getDocuments() as $document) {
+        foreach ($cours->getDocuments() as $document) {
             $nouveauDocument = clone $document;
             $newCours->addDocument($nouveauDocument);
         }
 
-        if ($arrete->isTypePostes() && $arrete->getDocumentAnnexeFinanciere()) {
-            $annexeFinanciere = clone $arrete->getDocumentAnnexeFinanciere();
+        if ($cours->isTypePostes() && $cours->getDocumentAnnexeFinanciere()) {
+            $annexeFinanciere = clone $cours->getDocumentAnnexeFinanciere();
             $newCours->setDocumentAnnexeFinanciere($annexeFinanciere);
         }
 
@@ -370,9 +367,9 @@ class CourManager
 
         $ministere = $this->getRestrictionDirections();
 
-        /* @var CoursRepository $arreteRepository */
-        $arreteRepository = $this->em->getRepository(Cours::class);
-        $query = $arreteRepository->initQueryBuilder($parameters, $ministere, $isDgafp)
+        /* @var CoursRepository $coursRepository */
+        $coursRepository = $this->em->getRepository(Cours::class);
+        $query = $coursRepository->initQueryBuilder($parameters, $ministere, $isDgafp)
             ->getQuery();
 
         $iterableResult = $query->iterate();
@@ -421,80 +418,26 @@ class CourManager
             ], ';');
 
             foreach ($iterableResult as $row) {
-                /* @var $arrete Cours */
-                $arrete = $row[0];
+                /* @var $cours Cours */
+                $cours = $row[0];
 
-                //Gestion des string potientllement
-                $ministere = $arrete->getDirection() ? $arrete->getDirection()->getMinistere() : null;
-                $direction = $arrete->getDirection() ? $arrete->getDirection()->getLibelleCourt() : $arrete->getDirectionTxt();
-
-                $corps = $arrete->getCorps();
-                $grade = $arrete->getGrade();
-
-                if (null == $ministere) {
-                    $ministere = '';
-                } else {
-                    $ministere = $arrete->getDirection()->getMinistere()->getLibelleLong();
-                }
-
-                if (null == $corps) {
-                    $corps = '';
-                } else {
-                    $corps = $arrete->getCorps()->getLibelleLong();
-                }
-
-                if (null == $grade) {
-                    $grade = '';
-                } else {
-                    $grade = $arrete->getGrade()->getLibelleLong();
-                }
-
-                if (null == $arrete->getMinistereTxt()) {
-                    $arrete->setMinistereTxt('');
-                }
-
-                if (null == $arrete->getCorpsGradeTxt()) {
-                    $arrete->setCorpsGradeTxt('');
-                }
 
                 //Calcul du nombre de postes total
-                $nbtotalPostes = $arrete->getNbPostes() + $arrete->getNbPostesTH() + $arrete->getNbPostesACVG();
+                $nbtotalPostes = $cours->getNombreCours();
 
-                $datePremiereEpreuve = $arrete->getDatePremiereEpreuve() ? $arrete->getDatePremiereEpreuve()->format('d/m/Y') : '';
                 //Ecriture dans le CSV
-                fputcsv($handle, [$arrete->getNumNor(),
-                    $arrete->getCoursReference() ? $arrete->getCoursReference()->getNumNor() : null,
-                    $ministere,
-                    $arrete->getMinistereTxt(),
-                    Util::formatCategorie($arrete->getCategorie()),
-                    $corps,
-                    $grade,
-                    $arrete->getCorpsGradeTxt(),
-                    $direction,
-                    $arrete->getAnneeConcours(),
-                    $arrete->getStatut(),
-                    $datePremiereEpreuve,
-                    $arrete->getModalite()->isNational() ? 'Oui' : 'Non',
-                    $arrete->getModalite()->isNationalAffectationLocale() ? 'Oui' : 'Non',
-                    $arrete->getModalite()->isDeconcentre() ? 'Oui' : 'Non',
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbExterne(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbInterne(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbTroisiemeConcours(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbUnik(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbExapro(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbSansConcoursExterne(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbPacte(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbSelectionProfessionnelle(),
-                    $arrete->getVoieAccesNbPostesDroitCommun()->getNbConcoursSpecial(),
-                    $arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbConcoursReserve(),
-                    $arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbSansConcoursInterneReserve(),
-                    $arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbExamenProReserve(),
-                    $arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbInterneExcept(),
-                    $arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbApprentiBoeth(),
-                    $arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbPromotionBoeth(),
-                    $arrete->getVoieAccesNbPostesAutreModeIntExt()->getNbAutres(),
-                    $arrete->getNbPostesACVG(),
-                    $arrete->getNbPostesTH(),
+                fputcsv($handle, [
+                    $cours->getCoursReference(),
+
+                    Util::formatCategorie($cours->getCategorie()),
+                    $cours->getDescription(),
+                    $cours->getCoursReference(),
+                    $cours->getStatut(),
+                    $cours->getNom(),
+                    $cours->getProfesseur(),
+                    $cours->getDateDebut()->format('d/y/m'),
+                    $cours->getDateCreation()->format('d/m/y H:i'),
+                    $cours->getContacts(),
                     $nbtotalPostes,
                 ], ';');
             }
@@ -547,7 +490,7 @@ class CourManager
     public function envoyerDgafp(Cours $cours)
     {
         $utilisateur = $this->security->getUser();
-        $cours->setStatut(EnumStatut::TRANSMIS_DGAFP)
+        $cours->setStatut(EnumStatut::TRANSMIS_PROFESSEUR)
             ->setDateTransmission(new \DateTime())
             ->setTransmisPar($utilisateur);
 
@@ -589,11 +532,11 @@ class CourManager
         $this->em->flush();
     }
 
-    public function devalider(Cours $arrete, $sujet, $destinataires, $copies, $corps)
+    public function devalider(Cours $cours, $sujet, $destinataires, $copies, $corps)
     {
         $utilisateur = $this->security->getUser();
 
-        $arrete->setStatut(EnumStatut::AVIS_CONFORME_ANNULE)
+        $cours->setStatut(EnumStatut::AVIS_CONFORME_ANNULE)
             ->setDateRetraitAvisConforme(new \DateTime())
             ->setRetraitAvisConformePar($utilisateur);
 
@@ -601,33 +544,33 @@ class CourManager
         $this->em->flush();
     }
 
-    public function annulerRejet(Cours $arrete)
+    public function annulerRejet(Cours $cours)
     {
-        $arrete->setStatut(EnumStatut::ACCUSE_RECEPTION)
+        $cours->setStatut(EnumStatut::ACCUSE_RECEPTION)
             ->setDateRejet(null)
             ->setRejetePar(null);
 
         $this->em->flush();
     }
 
-    public function validerTacitement(Cours $arrete)
+    public function validerTacitement(Cours $cours)
     {
-        $arrete->setStatut(EnumStatut::VALIDE_T)
+        $cours->setStatut(EnumStatut::VALIDE_T)
             ->setDateValidation(new \DateTime())
             ->setValidePar(null);
 
-        $this->mailer->sendNotificationValiderTacitement($arrete);
+        $this->mailer->sendNotificationValiderTacitement($cours);
         $this->em->flush();
     }
 
-    public function rejeter(Cours $arrete, $sujet, $destinataires, $copies, $corps)
+    public function rejeter(Cours $cours, $sujet, $destinataires, $copies, $corps)
     {
         $utilisateur = $this->security->getUser();
-        $arrete->setStatut(EnumStatut::REJETE)
+        $cours->setStatut(EnumStatut::REJETE)
             ->setDateRejet(new \DateTime())
             ->setRejetePar($utilisateur);
 
-        $this->mailer->sendNotificationRejeter($arrete, $sujet, $destinataires, $copies, $corps);
+        $this->mailer->sendNotificationRejeter($cours, $sujet, $destinataires, $copies, $corps);
         $this->em->flush();
     }
 
@@ -635,7 +578,7 @@ class CourManager
     {
         $indicateurs = $this->getIndicateurs();
 
-        $indicateurs['nbCourssUrgents'] = $this->repository->countCours([EnumStatut::TRANSMIS_DGAFP, EnumStatut::ACCUSE_RECEPTION], null, true);
+        $indicateurs['nbCourssUrgents'] = $this->repository->countCours([EnumStatut::TRANSMIS_PROFESSEUR, EnumStatut::ACCUSE_RECEPTION], null, true);
 
         return $indicateurs;
     }
@@ -653,10 +596,10 @@ class CourManager
     {
         $indicateurs = [];
 
-        $indicateurs['nbArretesTransmis'] = $this->repository->countArretes([EnumStatut::TRANSMIS_DGAFP], $directions);
+        $indicateurs['nbArretesTransmis'] = $this->repository->countArretes([EnumStatut::TRANSMIS_PROFESSEUR], $directions);
         $indicateurs['nbArretesAccuses'] = $this->repository->countArretes([EnumStatut::ACCUSE_RECEPTION], $directions);
         $indicateurs['nbArretesValides'] = $this->repository->countArretes([EnumStatut::VALIDE, EnumStatut::VALIDE_T], $directions);
-        $indicateurs['nbArretesEnAttenteTraitementDgafp'] = $this->repository->countArretes([EnumStatut::TRANSMIS_DGAFP, EnumStatut::ACCUSE_RECEPTION], $directions);
+        $indicateurs['nbArretesEnAttenteTraitementDgafp'] = $this->repository->countArretes([EnumStatut::TRANSMIS_PROFESSEUR, EnumStatut::ACCUSE_RECEPTION], $directions);
 
         return $indicateurs;
     }
@@ -666,7 +609,7 @@ class CourManager
         return $this->repository->getArreteFromNumeroNorPourMiseAJour($numNor, $directions);
     }
 
-    public function save(Arrete $arrete)
+    public function save(Arrete $cours)
     {
         if ($arrete->isTypeOuverture()) {
             $arrete->setNumNorReference($arrete->getNumNor());

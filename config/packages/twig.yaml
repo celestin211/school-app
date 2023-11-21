@@ -1,0 +1,15 @@
+twig:
+    form_themes: ['bootstrap_3_layout.html.twig', '@FOSCKEditor/Form/ckeditor_widget.html.twig']
+    exception_controller: null
+    globals:
+        company_name: '%app.company_name%'
+        app_name: '%app.app_name%'
+        version: '%app.version%'
+        matomoSiteId: '%app.matomo_site_id%'
+        menu_listener: '@App\EventListener\MenuListener'
+        message_manager: '@App\Service\MessageManager'
+        absolute_url: '%bac.absolute_url%'
+        ssoEnabled: "%env(bool:APP_SSO_ENABLED)%"
+    default_path: '%kernel.project_dir%/templates'
+    strict_variables:  true
+

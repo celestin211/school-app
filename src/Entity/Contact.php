@@ -38,8 +38,8 @@ class Contact implements GenericTraitInterface
     #[ORM\Column(name: 'notifier', type: 'boolean', length: 1)]
     private ?bool $notifier = false;
 
-    #[ORM\ManyToOne(targetEntity: Arrete::class, inversedBy: 'contacts')]
-    private ?Arrete $arrete = null;
+    #[ORM\ManyToOne(targetEntity: Professeur::class, inversedBy: 'contacts')]
+    private ?Professeur $professeur = null;
 
     public function setNom(?string $nom): static
     {
@@ -101,15 +101,20 @@ class Contact implements GenericTraitInterface
         return $this->notifier;
     }
 
-    public function setArrete(?Arrete $arrete = null): static
+    public function setProfesseur(?Professeur $professeur = null): static
     {
-        $this->arrete = $arrete;
+        $this->$professeur = $professeur;
 
         return $this;
     }
 
-    public function getArrete(): ?Arrete
+    public function getProfesseur(): ?Professeur
     {
-        return $this->arrete;
+        return $this->professeur;
+    }
+
+    public function isNotifier(): ?bool
+    {
+        return $this->notifier;
     }
 }

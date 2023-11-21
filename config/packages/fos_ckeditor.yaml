@@ -1,0 +1,9 @@
+fos_ck_editor:
+    base_path: "build/ckeditor"
+    js_path:   "build/ckeditor/ckeditor.js"
+    configs:
+        default:
+            toolbar: [ ["Bold", "Italic", "Underline"], ["Strike", "RemoveFormat", "NumberedList", "BulletedList", "Outdent", "Indent", "Blockquote", "Format", "Font", "FontSize", "Maximize",] ]
+            language: fr
+            removeButtons: ''
+            removePlugins: 'elementspath'

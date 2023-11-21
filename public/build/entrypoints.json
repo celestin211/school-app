@@ -1,0 +1,388 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_from_js-node_modules_core-js_modules_es_array_i-ef49e7.js",
+        "/build/vendors-node_modules_react_index_js-node_modules_twilio-video_es5_index_js-node_modules_axios-ffeb13.js",
+        "/build/vendors-node_modules_react-dom_client_js.js",
+        "/build/assets_js_video-calling_video-call_index_js.js",
+        "/build/app.js"
+      ],
+      "css": [
+        "/build/assets_styles_school-dashboard_css.css",
+        "/build/app.css"
+      ]
+    },
+    "dropdown": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/dropdown.js"
+      ]
+    },
+    "tinyMce": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/tinyMce.js"
+      ]
+    },
+    "ajax-loader": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_date_to-aba4c9.js",
+        "/build/ajax-loader.js"
+      ]
+    },
+    "scripts": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_internals_validate-arguments-length_js-node_modules_core-js_modu-f12916.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_filter_js-node_modules_core-js_modules_es_array-1a7999.js",
+        "/build/scripts.js"
+      ]
+    },
+    "dropdown-styles": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dropdown-styles.js"
+      ],
+      "css": [
+        "/build/dropdown-styles.css"
+      ]
+    },
+    "flash-bag": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_for-each_js-node_modules_core-js_modules_es_arr-697ddc.js",
+        "/build/flash-bag.js"
+      ]
+    },
+    "message.index.reception": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_object_-19aadf1.js",
+        "/build/message.index.reception.js"
+      ]
+    },
+    "utilisateur.index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/vendors-node_modules_datatables_net-responsive_js_dataTables_responsive_min_mjs.js",
+        "/build/utilisateur.index.js"
+      ]
+    },
+    "message.index.corbeille": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_object_-19aadf0.js",
+        "/build/message.index.corbeille.js"
+      ]
+    },
+    "nice-alert": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_object_-19aadf0.js",
+        "/build/nice-alert.js"
+      ]
+    },
+    "message.index.favoris": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_object_-19aadf2.js",
+        "/build/message.index.favoris.js"
+      ]
+    },
+    "message.show.reception": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_array_m-8c4f6a0.js",
+        "/build/message.show.reception.js"
+      ]
+    },
+    "message.show.corbeille": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_array_m-8c4f6a1.js",
+        "/build/message.show.corbeille.js"
+      ]
+    },
+    "message.show.favoris": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_array_m-8c4f6a2.js",
+        "/build/message.show.favoris.js"
+      ]
+    },
+    "bootstrap.bundle.min": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_internals_validate-arguments-length_js-node_modules_core-js_modu-f12916.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_from_js-node_modules_core-js_modules_es_array_i-ef49e7.js",
+        "/build/vendors-node_modules_core-js_internals_a-constructor_js-node_modules_core-js_modules_es_array-68a996.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-int_js-node_modules_core-js_modules_es_ar-636125.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_index-of_js-node_modules_core-js_modules_es_arr-e1ae17.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-float_js-node_modules_core-js_modules_es_-bfd708.js",
+        "/build/bootstrap.bundle.min.js"
+      ]
+    },
+    "bootstrap.min": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_internals_validate-arguments-length_js-node_modules_core-js_modu-f12916.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_from_js-node_modules_core-js_modules_es_array_i-ef49e7.js",
+        "/build/vendors-node_modules_core-js_internals_a-constructor_js-node_modules_core-js_modules_es_array-68a996.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-int_js-node_modules_core-js_modules_es_ar-636125.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-float_js-node_modules_core-js_modules_es_-bfd708.js",
+        "/build/vendors-node_modules_popperjs_core_lib_index_js-node_modules_core-js_modules_es_array_find_js-35ecbe.js",
+        "/build/bootstrap.min.js"
+      ]
+    },
+    "popper.min": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_internals_validate-arguments-length_js-node_modules_core-js_modu-f12916.js",
+        "/build/vendors-node_modules_core-js_internals_a-constructor_js-node_modules_core-js_modules_es_array-68a996.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_index-of_js-node_modules_core-js_modules_es_arr-e1ae17.js",
+        "/build/vendors-node_modules_core-js_internals_check-correctness-of-iteration_js-node_modules_core-js-61f343.js",
+        "/build/popper.min.js"
+      ]
+    },
+    "bootstrap-notify": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_internals_validate-arguments-length_js-node_modules_core-js_modu-f12916.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_functio-9daa37.js",
+        "/build/bootstrap-notify.js"
+      ]
+    },
+    "Chart.extension": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/Chart.extension.js"
+      ]
+    },
+    "chartjs.min": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_internals_validate-arguments-length_js-node_modules_core-js_modu-f12916.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_from_js-node_modules_core-js_modules_es_array_i-ef49e7.js",
+        "/build/vendors-node_modules_core-js_internals_a-constructor_js-node_modules_core-js_modules_es_array-68a996.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-int_js-node_modules_core-js_modules_es_ar-636125.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_index-of_js-node_modules_core-js_modules_es_arr-e1ae17.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-float_js-node_modules_core-js_modules_es_-bfd708.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_fill_js-node_modules_core-js_modules_es_array_f-3b07ff.js",
+        "/build/chartjs.min.js"
+      ]
+    },
+    "perfect-scrollbar.min": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_every_js-node_modules_core-js_modules_es_array_-52ef8c.js",
+        "/build/perfect-scrollbar.min.js"
+      ]
+    },
+    "smooth-scrollbar.min": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_internals_validate-arguments-length_js-node_modules_core-js_modu-f12916.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_from_js-node_modules_core-js_modules_es_array_i-ef49e7.js",
+        "/build/vendors-node_modules_core-js_internals_a-constructor_js-node_modules_core-js_modules_es_array-68a996.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-int_js-node_modules_core-js_modules_es_ar-636125.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_reduce_js-node_modules_core-js_modules_es_array-7ff490.js",
+        "/build/smooth-scrollbar.min.js"
+      ]
+    },
+    "proscroll": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/proscroll.js"
+      ]
+    },
+    "navbar-change": {
+      "js": [
+        "/build/runtime.js",
+        "/build/navbar-change.js"
+      ]
+    },
+    "video-calling/video-call.index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/vendors-node_modules_core-js_internals_array-method-has-species-support_js-node_modules_core--3d664a.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_from_js-node_modules_core-js_modules_es_array_i-ef49e7.js",
+        "/build/vendors-node_modules_react_index_js-node_modules_twilio-video_es5_index_js-node_modules_axios-ffeb13.js",
+        "/build/assets_js_video-calling_video-call_index_js.js",
+        "/build/video-calling/video-call.index.js"
+      ]
+    },
+    "cours.index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/vendors-node_modules_datatables_net-responsive_js_dataTables_responsive_min_mjs.js",
+        "/build/cours.index.js"
+      ]
+    },
+    "animation-book": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/animation-book.js"
+      ]
+    },
+    "video-enter": {
+      "js": [
+        "/build/runtime.js",
+        "/build/video-enter.js"
+      ],
+      "css": [
+        "/build/video-enter.css"
+      ]
+    },
+    "toggle-menu-open": {
+      "js": [
+        "/build/runtime.js",
+        "/build/toggle-menu-open.js"
+      ],
+      "css": [
+        "/build/toggle-menu-open.css"
+      ]
+    },
+    "video": {
+      "js": [
+        "/build/runtime.js",
+        "/build/video.js"
+      ],
+      "css": [
+        "/build/video.css"
+      ]
+    },
+    "photo.index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/photo.index.js"
+      ]
+    },
+    "closeelement": {
+      "js": [
+        "/build/runtime.js",
+        "/build/closeelement.js"
+      ]
+    },
+    "chart.index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_sy-0eab75.js",
+        "/build/vendors-node_modules_core-js_modules_es_error_cause_js-node_modules_core-js_modules_es_error_-f2dd87.js",
+        "/build/chart.index.js"
+      ]
+    },
+    "bar-chart": {
+      "js": [
+        "/build/runtime.js",
+        "/build/bar-chart.js"
+      ]
+    },
+    "toggle.menu": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/toggle.menu.js"
+      ]
+    },
+    "side-navbar": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_arra-9ca245.js",
+        "/build/side-navbar.js"
+      ]
+    },
+    "school-dashboard": {
+      "js": [
+        "/build/runtime.js",
+        "/build/school-dashboard.js"
+      ],
+      "css": [
+        "/build/assets_styles_school-dashboard_css.css"
+      ]
+    },
+    "flash-bag-index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/flash-bag-index.js"
+      ],
+      "css": [
+        "/build/flash-bag-index.css"
+      ]
+    }
+  }
+}

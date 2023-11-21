@@ -1,27 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+<div class="header-video">
+    <nav class="tools-kit">
 
-
-<div class="header">
-    <nav>
-        <img src="https://i.postimg.cc/Sx0ZGtQJ/logo.png" class="logo">
-        <ul>
-            <li><img src="https://i.postimg.cc/L8zxQBhv/live.png" class="active"></li>
-            <li><img src="https://i.postimg.cc/JnggC78Q/video.png"></li>
-            <li><img src="https://i.postimg.cc/vmb3JgVy/message.png"></li>
-            <li><img src="https://i.postimg.cc/qR7Q7PwZ/notification.png"></li>
-            <li><img src="https://i.postimg.cc/k4DZH604/users.png"></li>
-            <li><img src="https://i.postimg.cc/v84Fqkyz/setting.png"></li>
+        <ul class="items-video">
+            <li class="item"><img src="https://i.postimg.cc/L8zxQBhv/live.png" class="active"></li>
+            <li class=""><img src="https://i.postimg.cc/JnggC78Q/video.png"></li>
+            <li class="item"><img src="https://i.postimg.cc/vmb3JgVy/message.png"></li>
+            <li class="item"><img src="https://i.postimg.cc/qR7Q7PwZ/notification.png"></li>
+            <li class="item"><img src="https://i.postimg.cc/k4DZH604/users.png"></li>
+            <li class="item"><img src="https://i.postimg.cc/v84Fqkyz/setting.png"></li>
         </ul>
     </nav>
-    <div class="container">
-        <div class="top-icons">
-            <img src="https://i.postimg.cc/cCpcXrSV/search.png">
-            <img src="https://i.postimg.cc/Pqy2TXWw/menu.png">
-        </div>
-        <div class="row">
-            <div class="col-1">
+    <div class="container-video">
+        <div class="row-video">
+            <div class="col-1-video">
                 <img src="https://i.postimg.cc/521rVkhD/image.png" class="host-img">
                 <div class="contarols">
                     <img src="https://i.postimg.cc/3NVtVtgf/chat.png">
@@ -31,7 +25,7 @@
                     <img src="https://i.postimg.cc/Y2sDvCJN/cast.png">
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col-2-video">
                 <div class="joined">
                     <p>People Joined</p>
                     <div>
@@ -57,6 +51,4 @@
     </div>
 </div>
 </div>
-{% endblock %}
-</body>
-</html>
+{% endblock content %}

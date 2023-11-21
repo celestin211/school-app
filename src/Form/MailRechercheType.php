@@ -29,6 +29,6 @@ class MailRechercheType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'cisirh_bacbundle_mail_search';
+        return 'Messages';
     }
 }

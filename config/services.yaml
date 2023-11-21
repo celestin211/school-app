@@ -1,0 +1,131 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'fr'
+    app.app_name: Clever-School
+    app.app_short_name1: C
+    app.app_short_name2: V1
+    app.company_name:    Clever-School
+    mailer.from_address: noreply-Clever-School@school.fr
+    mailer.reply_address: noreply-Clever-School@school.fr
+    app.errors.to_email: ['celestin.mombela@yahoo.fr']
+    app.version: '1.0.0'
+    app.session_timeout: '%env(int:APP_SESSION_TIMEOUT)%'
+    app.url_api_ingres: '%env(URL_API_INGRES)%'
+    app.proxy_ingres_host: '%env(PROXY_INGRES_HOST)%'
+    app.proxy_ingres_port: '%env(PROXY_INGRES_PORT)%'
+    router.request_context.scheme: '%env(ROUTER_SCHEME)%'
+    router.request_context.host: '%env(ROUTER_HOST)%'
+    app.email_sgg: '%env(EMAIL_SGG)%'
+    app.email_service_greco: '%env(EMAIL_SERVICE_GRECO)%'
+    app.environnement: '%env(APP_ENVIRONNEMENT)%'
+    app.matomo_site_id: '%env(int:MATOMO_SITE_ID)%'
+    app.matomo_host: '%env(default::MATOMO_HOST)%'
+    app.sso.enabled: '%env(bool:APP_SSO_ENABLED)%'
+    app.sso.url_home: '%env(APP_SSO_URL_HOME)%'
+    bac.se.souvenir.de.moi: '%env(int:APP_REMEBERME_LIFETIME)%'
+    bac.absolute_url : '%env(APP_ABSOLUTE_URL)%'
+    bac.docs.tmpDir: '%kernel.project_dir%/public/uploads/data/tmp/'
+    app.errors.from_email: 'ne-pas-repondre@school.fr'
+    user_limit: 3
+    images_directory: '%kernel.project_dir%/assets/images/'
+
+
+
+
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $appName: 'GESTION'
+            $appEmailFrom: 'ne-pas-repondre@school.fr'
+            $nombreMaxDemandeReinitialisationMotDePasse: '%env(int:APP_NB_MAX_DEMANDE_REINITIALISATION_MOT_DE_PASSE)%'
+            $nbMaxConnexionKo: '%env(int:APP_NB_MAX_CONNEXION_KO)%'
+            $maxIdleTime: '%env(APP_SESSION_TIMEOUT)%'
+            $emailSgg: '%env(EMAIL_SGG)%'
+            $emailServiceGreco: '%env(EMAIL_SERVICE_GRECO)%'
+            $appEnvironnement: '%env(APP_ENVIRONNEMENT)%'
+            $checkCredentials: '%env(bool:APP_CHECK_CREDENTIALS)%'
+            $isSsoEnabled: '%env(bool:APP_SSO_ENABLED)%'
+            $ssoUrl: '%env(APP_SSO_URL_HOME)%'
+            $twilioApiKeySecret: ""
+            $twilioApiKeySid:
+            $twilioAccountSid:
+            $isWebEnabled: "'%env(bool:APP_WEB_ENABLED)%'"
+            $kernelRootDir:
+            $excelType:
+            $emailServiceBosongo:
+            $companyName:
+            $fromAddress:
+            $replyAddress: '%mailer.reply_address%'
+            $domaine: '%bac.absolute_url%'
+            $projectDir: "%kernel.project_dir%"
+            $photoDirectory: 'documents/dossier_agent/photos'
+            $tmpDir: '%bac.docs.tmpDir%'
+            $cacheDir: '%kernel.cache_dir%'
+            $rootDir: '%kernel.build_dir%'
+            $baseUrl: '%env(APP_CONTEXT_BASE_URL)%'
+            $dureeVieToken: '%env(APP_DUREE_VIE_TOKEN)%'
+            $kernelProjectDir: '%kernel.project_dir%'
+            $accountSid: '%env(TWILIO_ACCOUNT_SID)%'
+            $apiKeySid : '%env(TWILIO_API_KEY_SID)%'
+            $apiKeySecret : '%env(TWILIO_API_KEY_SECRET)%'
+
+
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: ['../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}', '../src/Form/EventListener/*']
+
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments, controller.tchat_video']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+
+    # Doctrine listeners
+    App\EventListener\OracleSessionInit:
+        tags:
+            - { name: doctrine.event_listener, event: postConnect }
+
+    # Service pour logger les traces sur les entités
+    App\EventListener\GenericTraitListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist}
+            - { name: doctrine.event_listener, event: preUpdate}
+
+
+    # Permet de rafraichir le menu de gauche sur l'application
+    App\EventListener\MenuListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: refreshMenu }
+
+
+    # Permet de générer le corps des emails pour le persister en base
+    Symfony\Bridge\Twig\Mime\BodyRenderer:
+        public: true
+
+    Symfony\Component\Mime\BodyRendererInterface: '@Symfony\Bridge\Twig\Mime\BodyRenderer'
+
+    Doctrine\Migrations\Version\DbalMigrationFactory: ~
+    App\Migrations\Factory\MigrationFactoryDecorator:
+        decorates: Doctrine\Migrations\Version\DbalMigrationFactory
+        arguments: ['@App\Migrations\Factory\MigrationFactoryDecorator.inner', '@service_container']
+
+    App\Logger\UsernameProcessor:
+        tags:
+            - { name: monolog.processor, handler: symfony_mailer }
+

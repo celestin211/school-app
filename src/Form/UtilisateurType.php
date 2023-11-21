@@ -37,12 +37,12 @@ class UtilisateurType extends AbstractType
         $utilisateur = $this->security->getUser();
 
         if ($utilisateur->hasRole('ROLE_ADMIN')) {
-            $roles['Administrateur'] = 'ROLE_ADMIN';
-            $roles['Utilisateur'] = 'ROLE_USER';
+            $roles['Professeur'] = 'ROLE_PROFESSEUR';
+            $roles['Eleve'] = 'ROLE_ELEVE';
         }
 
         if ($utilisateur->hasRole('ROLE_ADMIN')) {
-            $roles['Administrateur ROLE_ADMIN'] = 'ROLE_ADMIN';
+            $roles['Professeur ROLE_PROFESSEUR'] = 'ROLE_ELEVE';
 
         }
 
@@ -94,7 +94,7 @@ class UtilisateurType extends AbstractType
                 ],
             ))
             ->add('role', ChoiceType::class, [
-                'data' => $role, // valeur par defaut 'ROLE_MIN'
+                'data' => $roles, // valeur par defaut 'ROLE_MIN'
                 'constraints' => new NotBlank(['message' => 'Role obligatoire']),
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
