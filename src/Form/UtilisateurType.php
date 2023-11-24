@@ -10,6 +10,7 @@ use App\EnumTypes\EnumCiviliteType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,32 +22,36 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UtilisateurType extends AbstractType
 {
-    private $security;
 
+    private Security $security;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->security = $security;
+        $this->authorizationChecker = $authorizationChecker;
     }
+
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $roles = [];
+        /* @var Utilisateur $currentUser */
+        $currentUser = $this->security->getUser();
+        /* @var  Utilisateur $utilisateur */
+        $utilisateur = $builder->getData();
+        $role = $utilisateur ? $utilisateur->getRoles()[0] : 'ROLE_ADMIN';
 
-        /* @var $utilisateur Utilisateur */
-        $utilisateur = $this->security->getUser();
+        if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            $roles = [ 'ROLE_ADMIN' => 'Administrateur',
+                'ROLE_PROFESSEUR' => 'Professuer d\'élèves ',
+                'ROLE_ELEVE' => 'Elèves',
 
-        if ($utilisateur->hasRole('ROLE_ADMIN')) {
-            $roles['Professeur'] = 'ROLE_PROFESSEUR';
-            $roles['Eleve'] = 'ROLE_ELEVE';
+            ];
+        } elseif ($this->authorizationChecker->isGranted('ROLE_PROFESSEUR')) {
+            $roles = ['ROLE_ADMIN' => 'Administrateur gestionnaire', 'ROLE_PROFESSEUR' => 'Administrateur valideur'];
+        } else {
+            $roles = [];
         }
-
-        if ($utilisateur->hasRole('ROLE_ADMIN')) {
-            $roles['Professeur ROLE_PROFESSEUR'] = 'ROLE_ELEVE';
-
-        }
-
-        $roles['Correspondant  consultant application'] = 'ROLE_CONSULT_MIN';
 
         /* @var Utilisateur $utilisateur */
         $utilisateur = $builder->getData();
@@ -93,27 +98,19 @@ class UtilisateurType extends AbstractType
                     'placeholder' => 'Veuillez confirmer votre mot de passe',
                 ],
             ))
-            ->add('role', ChoiceType::class, [
-                'data' => $roles, // valeur par defaut 'ROLE_MIN'
-                'constraints' => new NotBlank(['message' => 'Role obligatoire']),
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                ],
-                'attr' => [
-                    'class' => 'utilisateur',
-                ],
-            ])
-
             ->add(
-                'file',
-                FileType::class,
+                'role',
+                ChoiceType::class,
                 [
-                    'label' => false,
+                    'choices' => array_flip($roles),
+                    'expanded' => true,
+                    'multiple' => false,
+                    'data' => $role, // valeur par defaut 'ROLE_MIN'
+                    'label' => 'Rôle',
+                    'mapped' => false,
+                    'constraints' => new NotBlank(['message' => 'Role obligatoire']),
                 ]
-            )
-            ->add('toDelete', CheckboxType::class)
-        ;;
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

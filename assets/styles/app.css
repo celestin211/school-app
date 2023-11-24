@@ -49962,7 +49962,8 @@ Github: https://github.com/fiduswriter/Simple-DataTables
     background-image:linear-gradient(310deg,#5e72e4,#825ee4)
 }
 .dataTable-wrapper.no-footer .dataTable-container {
-    border-bottom:0
+    border-bottom:0;
+    overflow-x: hidden;
 }
 .dataTable-table tbody td,
 .dataTable-table tbody th,

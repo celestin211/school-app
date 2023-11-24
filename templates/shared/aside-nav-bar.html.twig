@@ -182,7 +182,7 @@
                                                         <img src="{{ asset('build/images/dist/img/avatar5.png') }}" class="img-circle" alt="">
                                                     </div>
                                                     <h4>
-                                                        {{ message.expediteur.prenom | title}} {{message.expediteur.nom | upper}}
+{#                                                        {{ message.expediteur.prenom | title}} {{message.expediteur.nom | upper}}#}
                                                         <small><i class="fa fa-clock-o"></i> {{ message.dateEnvoi | date_diff }}</small>
                                                     </h4>
                                                     <p>{{ message.getObjetTronquee }}</p>

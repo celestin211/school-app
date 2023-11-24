@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Document;
 use App\Entity\Message;
+use App\Entity\Professeur;
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -514,7 +515,7 @@ class SchoolMailService
             'confirmationUrl' => $url,
         ]);
 
-        $this->sendMessage($user, 'Confirmation de création de compte SIGNAC', $rendered);
+        $this->sendMessage($user, 'Confirmation de la création de votre compte CLEVER-SCHOOL', $rendered);
     }
 
 
@@ -557,7 +558,7 @@ class SchoolMailService
     }
 
     // Fonction d'envoi de mail de notification aux utilisateurs actifs ayant le rôle DGAFP
-    public function notifierDevalidationListePromouvables(ListeAlimentation $liste)
+    public function notifierDevalidationListePromouvables(Professeur $liste)
     {
         $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Dévalidation de la liste des promouvables du Ministère '.$liste->getMinistere()->getLibelleCourt();
 
@@ -567,7 +568,7 @@ class SchoolMailService
     }
 
     // Fonction d'envoi de mail de notification aux utilisateurs actifs ayant le rôle DGAFP
-    public function notifierDevalidationFichesProposition(ListeAlimentation $liste)
+    public function notifierDevalidationFichesProposition(Professeur $liste)
     {
         $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Dévalidation des fiches de proposition du Ministère '.$liste->getMinistere()->getLibelleCourt();
 
@@ -577,7 +578,7 @@ class SchoolMailService
     }
 
     // Fonction d'envoi de mail de notification aux utilisateurs actifs ayant le rôle DGAFP
-    public function notifierDevalidationFichesIntegration(ListeAlimentation $liste)
+    public function notifierDevalidationFichesIntegration(Professeur $liste)
     {
         $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Dévalidation des fiches d'intégration du Ministère ".$liste->getMinistere()->getLibelleCourt();
 
@@ -587,7 +588,7 @@ class SchoolMailService
     }
 
     // Fonction d'envoi de mail de notification aux utilisateurs actifs ayant le rôle DGAFP
-    public function notifierDevalidationListeAgents(ListeAlimentation $liste)
+    public function notifierDevalidationListeAgents(Professeur $liste)
     {
         $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Dévalidation de la liste d'agents du Ministère ".$liste->getMinistere()->getLibelleCourt();
 
@@ -619,11 +620,11 @@ class SchoolMailService
         $this->mailer->send($mailObject);
     }
 
-    private function notifierDevalidation(ListeAlimentation $liste, $subject, $template)
+    private function notifierDevalidation(Professeur $liste, $subject, $template)
     {
         $utilisateursDgafp = $this->utilisateurRepository->findUtilisateursDgafp();
 
-        // Envoyer une notification aux utilisateurs actifs qui ont un rôle DGAFP
+        // Envoyer une notification aux utilisateurs actifs qui ont un rôle Prof
         /** @var Utilisateur $utilisateur */
         foreach ($utilisateursDgafp as $utilisateur) {
             $body = $this->templating->render($template, [
@@ -637,13 +638,13 @@ class SchoolMailService
 
     protected function sendMessage(Utilisateur $to, $subject, $body, $piecesJointes = null, Utilisateur $from = null)
     {
-        // Ajouter le message à la messagerie signac
+        // Ajouter le message à la messagerie clever-school
         /* @var $message Message */
         $message = new Message();
 
 
         if (!$from) {
-            $from = $this->em->getRepository(Utilisateur::class)->findOneBy(['email' => 'noreply-signac@finances.gouv.fr']);
+            $from = $this->em->getRepository(Utilisateur::class)->findOneBy(['email' => 'noreply-clever-school@yahoo.fr']);
         }
 
         $message->setDestinataire($to)
@@ -661,7 +662,7 @@ class SchoolMailService
         $this->em->flush();
 
         // On envoie un mail si le flag recevoirNotifSignac de l'utilisateur est à : 1
-        if ($to->getRecevoirNotifSignac()) {
+        if ($to->getRecevoirNotifSchool()) {
             $mail = new Email();
             $mail
                 ->to($to->getEmail())

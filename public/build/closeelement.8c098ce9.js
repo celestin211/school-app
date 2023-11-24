@@ -1,0 +1,1 @@
+(self.webpackChunkschool_app=self.webpackChunkschool_app||[]).push([[8085],{14636:()=>{$((function(){$(".popup-onload").show(),$(".close").click((function(){return $(".popup-onload").hide(),!1})),$(".x").click((function(){return $(".popup-onload").hide(),!1})),$(".popup-wrapper").click((function(){return $(".popup-onload").hide(),!1}))}))}},p=>{var o;o=14636,p(p.s=o)}]);

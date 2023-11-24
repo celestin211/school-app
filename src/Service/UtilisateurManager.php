@@ -33,14 +33,12 @@ class UtilisateurManager
     private $mailer;
 
     public function __construct(
-        ExcelFileWriter $excelWriter,
         AuthorizationCheckerInterface $roleService,
         EntityManagerInterface $em,
         SecurityManager $securityManager,
         UserPasswordHasherInterface $passwordHasher,
         SchoolMailService $mailer
     ) {
-        $this->excelWriter = $excelWriter;
         $this->roleService = $roleService;
         $this->em = $em;
 
@@ -53,7 +51,7 @@ class UtilisateurManager
      * Cette fonction évalue si l'utilisateur connecté ($utilisateurConnecte) peut effectuer une action (new/edit ...)
      *  sur l'utilisateur selon son rôle ($roleUtilisateurAction) passé en paramètre
      */
-    public function peutFaireActionDGAFP(Utilisateur $utilisateurConnecte, $roleUtilisateurAction)
+    public function peutFaireActionAdmin(Utilisateur $utilisateurConnecte, $roleUtilisateurAction)
     {
         if (!in_array($roleUtilisateurAction, ['ROLE_ADMIN']) && 'ROLE_USER' == $utilisateurConnecte->getRoles()[0]) {
             throw new AccessDeniedException("Accès non autorisé. L'administrateur est notifié de l'action");

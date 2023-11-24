@@ -178,12 +178,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
 
     public function getRecevoirNotifSchool(): ?bool
     {
-        return $this->recevoirNotifSignac;
+        return $this->recevoirNotifSchool;
     }
 
-    public function setRecevoirNotifSchool(?bool $recevoirNotifSignac): static
+    public function setRecevoirNotifSchool(?bool $recevoirNotifSchool): static
     {
-        $this->recevoirNotifSignac = $recevoirNotifSignac;
+        $this->recevoirNotifSchool = $recevoirNotifSchool;
 
         return $this;
     }

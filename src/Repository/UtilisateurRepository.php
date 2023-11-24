@@ -2,8 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Ministere;
-use App\Entity\Tchat;
+use App\Entity\RendezVous;
 use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -28,12 +27,8 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
                 ELSE '' END)";
 
     const CASE_ROLE = "(CASE
-                WHEN utilisateur.roles like '%\"ROLE_ADMIN\"%' THEN 'Administrateur'
-                WHEN utilisateur.roles like '%\"ROLE_DGAFP_VIP\"%' THEN 'DGAFP VIP'
-                WHEN utilisateur.roles like '%\"ROLE_DGAFP\"%' THEN 'DGAFP'
-                WHEN utilisateur.roles like '%\"ROLE_MIN_VAL\"%' THEN 'Ministère valideur'
-                WHEN utilisateur.roles like '%\"ROLE_MIN\"%' THEN 'Ministère gestionnaire'
-                WHEN utilisateur.roles like '%\"ROLE_BT\"%' THEN 'Bureau technique'
+                WHEN utilisateur.roles like '%\"ROLE_ELEVE\"%' THEN 'Administrateur'
+                WHEN utilisateur.roles like '%\"ROLE_PROFESSEUR\"%' THEN 'PROFESSEUR VIP'
                 ELSE '' END)";
 
     public function __construct(ManagerRegistry $registry)
@@ -42,7 +37,7 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
     }
 
     // Retourne tous les utilisateurs Ministere actifs
-    public function findUtilisateurs(array $roles = [], ?Tchat $tchat = null)
+    public function findUtilisateurs(array $roles = [], ?RendezVous $rendezVouses = null)
     {
         $qb = $this->createQueryBuilder('u');
 
@@ -61,36 +56,36 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
             $qb->andWhere($where);
         }
 
-        if ($tchat) {
-            $qb->andWhere('u.ministere = :ministere')
-                ->setParameter('ministere', $tchat);
+        if ($rendezVouses) {
+            $qb->andWhere('u.rendezVouses = :rendezVouses')
+                ->setParameter('rendezVouses', $rendezVouses);
         }
 
         return $qb->getQuery()->getResult();
     }
 
-    public function findValideursByMinistere($tchat)
+    public function findValideursByRendezVous($rendezVouses)
     {
         return $this->createQueryBuilder('u')
-            ->where('u.tchat = :tchat')
+            ->where('u.rendezVouses = :rendezVouses')
             ->andWhere('u.roles LIKE :role')
             ->andWhere('u.enabled = 1')        	// utilisateur actif
             ->andWhere('u.locked = 0')			// utilisateur
             ->andWhere('u.expired = 0')			// utilisateur non expiré
-            ->setParameter('tchat', $tchat)
+            ->setParameter('rendezVouses', $rendezVouses)
             ->setParameter('role', '%"ROLE_MIN_VAL"%')
             ->getQuery()
             ->getResult();
     }
 
-    public function findUtilisateursByMinistere($tchat)
+    public function findUtilisateursByRendezVous($rendezVouses)
     {
         return $this->createQueryBuilder('u')
-            ->where('u.tchat = :tchat')
+            ->where('u.rendezVouses = :rendezVouses')
             ->andWhere('u.enabled = 1')        	// utilisateur actif
             ->andWhere('u.locked = 0')			// utilisateur
             ->andWhere('u.expired = 0')			// utilisateur non expiré
-            ->setParameter('tchat', $tchat)
+            ->setParameter('rendezVouses', $rendezVouses)
             ->getQuery()
             ->getResult();
     }
@@ -99,10 +94,10 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
     public function findUtilisateursMinistere()
     {
         return $this->createQueryBuilder('u')
-            ->where('u.roles LIKE :ROLE_MIN OR u.roles LIKE :ROLE_MIN_VAL')
+            ->where('u.roles LIKE :ROLE_ELEVE OR u.roles LIKE :ROLE_PROFESSEUR')
             ->andWhere('u.enabled = 1')			// utilisateur non expiré
-            ->setParameter('ROLE_MIN', '%"ROLE_MIN"%')
-            ->setParameter('ROLE_MIN_VAL', '%"ROLE_MIN_VAL"%')
+            ->setParameter('ROLE_ELEVE', '%"ROLE_ELEVE"%')
+            ->setParameter('ROLE_PROFESSEUR', '%"ROLE_PROFESSEUR"%')
             ->getQuery()
             ->getResult();
     }
@@ -111,9 +106,9 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
     public function findUtilisateursDgafp()
     {
         return $this->createQueryBuilder('u')
-            ->where('u.roles LIKE :ROLE_DGAFP')
+            ->where('u.roles LIKE :ROLE_PROFESSEUR')
             ->andWhere('u.enabled = 1')			// utilisateur non expiré
-            ->setParameter('ROLE_DGAFP', '%"ROLE_DGAFP"%')
+            ->setParameter('ROLE_PROFESSEUR', '%"ROLE_PROFESSEUR"%')
             ->getQuery()
             ->getResult();
     }
@@ -122,18 +117,18 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
     public function getUsersSaufAdmin()
     {
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.tchat', 't')
-            ->select('t.libelleCourt as civilite')
+            ->leftJoin('u.rendezVouses', 'r')
+            ->select('u.civilite')
             ->addSelect('u.nom')
             ->addSelect('u.prenom')
             ->addSelect('u.email')
             ->addSelect('u.roles')
             ->addSelect('u.enabled')
             ->addSelect('r.rendezVouses')
-            ->where('u.roles not LIKE :admin')
+            ->where('u.roles not LIKE :professeur')
             ->andWhere('u.enabled = 1')			// utilisateur actif
-            ->setParameter('admin', '%"ROLE_ADMIN"%')
-            ->orderBy('m.libelleCourt')
+            ->setParameter('professeur', '%"ROLE_PROFESSEUR"%')
+            ->orderBy('r.rendezVouses')
             ->addOrderBy('u.nom')
             ->addOrderBy('u.prenom');
 
@@ -145,18 +140,17 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
     {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.rendezVouses', 'r')
-            ->join('u.tchats', 'c')
-            ->select('t.tchats as tchats')
+            ->select('u.civilite')
             ->addSelect('u.nom')
             ->addSelect('u.prenom')
             ->addSelect('u.email')
             ->addSelect('u.roles')
             ->addSelect('u.enabled')
-            ->addSelect('r.rendezVouses');
+            ->addSelect('r.rendezVouses ');
         if (!$isAdmin) {
-            $qb = $qb->andwhere('u.roles LIKE :ROLE_MIN_VAL OR u.roles LIKE :ROLE_MIN')
+            $qb = $qb->andwhere('u.roles LIKE :ROLE_PROFESSEUR OR u.roles LIKE :ROLE_MIN')
                 ->andWhere('u.enabled = 1')			// utilisateur actif
-                ->setParameter('ROLE_MIN_VAL', '%"ROLE_MIN_VAL"%')
+                ->setParameter('ROLE_PROFESSEUR', '%"ROLE_PROFESSEUR"%')
                 ->setParameter('ROLE_MIN', '%"ROLE_MIN"%');
         }
 
@@ -180,10 +174,10 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
 
     public function search(string $search, int $start, int $length, array $order, bool $isAdmin = false)
     {
-        $colonnes = [ 'utilisateur.nom', 'utilisateur.prenom', 'utilisateur.email', 'ministere.libelleCourt', 'role', 'statut'];
+        $colonnes = ['utilisateur.civilite', 'utilisateur.nom', 'utilisateur.prenom', 'utilisateur.email', 'utilisateur.rendezVouses', 'role', 'statut'];
 
         $qb = $this->createQueryBuilder('utilisateur')
-            ->join('utilisateur.rendezVouses', 'rendezVouses')
+            ->leftJoin('utilisateur.rendezVouses', 'rendezVouses')
             ->addSelect(self::CASE_STATUT.' AS statut')
             ->addSelect(self::CASE_ROLE.' AS role')
             ->addSelect(self::CASE_STATUT.' AS HIDDEN statut_h')
@@ -195,14 +189,15 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
 
         $query = $qb->getQuery()->setMaxResults($length)->setFirstResult($start);
 
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+
+        return $query->getResult();
     }
 
     public function searchCount(bool $isAdmin = false, string $search = null)
     {
         $qb = $this->createQueryBuilder('utilisateur')
+            ->leftJoin('utilisateur.rendezVouses', 'rendezVouses')
             ->select('COUNT(utilisateur)')
         ;
 
@@ -213,7 +208,7 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
 
     public function addSearchWhere(QueryBuilder $qb, ?string $search, bool $isAdmin)
     {
-        $colonnesTexte = [ 'utilisateur.nom', 'utilisateur.cilivite', 'utilisateur.prenom', 'utilisateur.email'];
+        $colonnesTexte = ['utilisateur.civilite', 'utilisateur.nom', 'utilisateur.prenom', 'utilisateur.email', 'rendezvous.rendezVouses'];
 
         if (strlen($search) > 0) {
             $orXSearch = $qb->expr()->orX();
@@ -230,10 +225,10 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
 
         if (!$isAdmin) {
             $qb = $qb
-                ->andwhere('utilisateur.roles LIKE :ROLE_MIN_VAL OR utilisateur.roles LIKE :ROLE_MIN')
+                ->andwhere('utilisateur.roles LIKE :ROLE_ADMIN OR utilisateur.roles LIKE :ROLE_PROFESSEUR')
                 ->andWhere('utilisateur.enabled = 1')			// utilisateur actif
-                ->setParameter('ROLE_MIN_VAL', '%"ROLE_MIN_VAL"%')
-                ->setParameter('ROLE_MIN', '%"ROLE_MIN"%');
+                ->setParameter('ROLE_ADMIN', '%"ROLE_ADMIN"%')
+                ->setParameter('ROLE_PROFESSEUR', '%"ROLE_PROFESSEUR"%');
         }
 
         return $qb;

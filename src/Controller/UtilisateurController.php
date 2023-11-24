@@ -72,7 +72,7 @@ class UtilisateurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $form->get('role')->getData();
             //Todo: Créer un voter
-            $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $role);
+            $utilisateurManager->peutFaireActionAdmin($this->getUser(), $role);
             $utilisateurManager->creerUtilisateur($utilisateur, $role);
             $this->addFlash('success', 'Utilisateur "'.$utilisateur->getEmail().'" créé avec succès !');
 
@@ -98,7 +98,7 @@ class UtilisateurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $form->get('role')->getData();
             //Todo: Créer un voter
-            $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $role);
+            $utilisateurManager->peutFaireActionAdmin($this->getUser(), $role);
             $utilisateurManager->creerUtilisateur($utilisateur, $role);
             $this->addFlash('success', 'Utilisateur "'.$utilisateur->getEmail().'" créé avec succès !');
 
@@ -127,7 +127,7 @@ class UtilisateurController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $form->get('role')->getData();
-            $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $role);
+            $utilisateurManager->peutFaireActionAdmin($this->getUser(), $role);
             $utilisateur->setRoles([$role]);
             $em->flush();
             $this->addFlash('success', 'Utilisateur "'.$utilisateur->getEmail().'" mis à jour avec succès !');
@@ -151,7 +151,7 @@ class UtilisateurController extends AbstractController
     {
         //Voter
         $roleUtilisateurASupprimer = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurASupprimer);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurASupprimer);
 
         $form = $this->createDeleteForm($utilisateur);
         $form->handleRequest($request);
@@ -225,7 +225,7 @@ class UtilisateurController extends AbstractController
     {
         //Voter
         $roleUtilisateurAActiver = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurAActiver);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurAActiver);
 
         $form = $this->createEnableForm($utilisateur->getId());
         $form->handleRequest($request);
@@ -253,7 +253,7 @@ class UtilisateurController extends AbstractController
     {
         //Voter
         $roleUtilisateurADesactiver = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurADesactiver);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurADesactiver);
 
         $form = $this->createDisableForm($utilisateur->getId());
         $form->handleRequest($request);
@@ -281,7 +281,7 @@ class UtilisateurController extends AbstractController
     {
         //Voter
         $roleUtilisateurADebloquer = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurADebloquer);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurADebloquer);
 
         $form = $this->createUnlockForm($utilisateur->getId());
         $form->handleRequest($request);
@@ -354,7 +354,7 @@ class UtilisateurController extends AbstractController
         $user = $em->getRepository(Utilisateur::class)->find($idUser);
 
         if (!$user) {
-            throw $this->createNotFoundException("UtilisateurController.updateStatutRecevoirNotificationSIGNACAction: aucun utilisateur n'est trouvé avec l'id: ".$user);
+            throw $this->createNotFoundException("UtilisateurController.updateStatutRecevoirNotificationCLEVERAction: aucun utilisateur n'est trouvé avec l'id: ".$user);
         }
 
         //Récupérer le statut actuel : $recevoirNotifSignac
@@ -383,7 +383,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route(path: '/pagination', name: 'pagination', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ELEVE')]
+    #[IsGranted('ROLE_ADMIN')]
     public function pagination(Request $request, UtilisateurRepository $utilisateurRepository): \Symfony\Component\HttpFoundation\JsonResponse
     {
         $draw = $request->get('draw', 1);

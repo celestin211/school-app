@@ -5,8 +5,6 @@ export function oLanguage_fr() {
     sProcessing: "Traitement en cours...",
     sSearch: "Rechercher&nbsp;:",
     sLengthMenu: "_MENU_ &eacute;l&eacute;ments / page",
-    sInfo:
-      "Affichage des &eacute;l&eacute;ments _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
     sInfoEmpty: "Aucun &eacute;l&eacute;ment",
     sInfoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
     sInfoPostFix: "",
