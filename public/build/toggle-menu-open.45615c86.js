@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkschool_app=self.webpackChunkschool_app||[]).push([[7404],{19205:()=>{}},s=>{var p;p=19205,s(s.s=p)}]);

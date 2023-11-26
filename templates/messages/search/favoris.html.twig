@@ -1,0 +1,36 @@
+{% extends "messages/index/favoris.html.twig" %}
+
+
+
+{# Redefinir les redirections des icones, pour gérer la pagination dans la recherche #}
+{# Dans le template parent (index) on appelle l'action messagerie#}
+
+{% block icone_precedent_haut %} {{ path('mail_rechercher' , {"page":page-1})}} {% endblock icone_precedent_haut %}
+
+{% block icone_precedent_bas %}  {{ path('mail_rechercher' , {"page":page-1})}} {% endblock icone_precedent_bas %}
+
+{% block icone_suivant_haut %}   {{ path('mail_rechercher' , {"page":page+1})}} {% endblock icone_suivant_haut %}
+
+{% block icone_suivant_bas %}    {{ path('mail_rechercher' , {"page":page+1})}} {% endblock icone_suivant_bas %}
+
+
+{# Si aucun message n'a été trouvé, on affiche un message approprié, sinon on affiche l'ensemble des messages trouvés#}
+{% block messages %}
+	{% if messages|length == 0 %}
+		
+		<tr>
+			<td>
+				Aucun élément n'a été trouvé 
+			</td>
+		</tr>
+		
+	{% else %}
+		{{ parent() }}
+				
+	{% endif %}
+		
+{% endblock messages %}
+
+{% block titre %}
+	Résultat de la recherche
+{% endblock titre %}

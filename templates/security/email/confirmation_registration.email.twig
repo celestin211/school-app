@@ -1,0 +1,25 @@
+{% extends 'Mail/mail.base.html.twig' %}
+
+{% block corpsMessage %}
+
+	Nous vous informons que votre compte  <a href="{{ absolute_url }}"> {{ app_name }} </a> vient d'être créé.
+
+	{% if(ssoEnabled) %}
+
+			Vous allez recevoir un email du portail SSO afin d'effectuer la l'initialisation de votre mot de passe.
+
+			Quand votre mot de passe aura été initialisé, vous aurez accès à l'application {{ app_name }} via le portail SSO.
+
+			Vous trouverez ci-dessous le lien du portail SSO pour les prochaines connexions.
+
+			<a href="{{ ssoUrlHome }}" class="btn_mail_link">Accéder à l'application</a>
+	{% else %}
+	Pour initialiser votre mot de passe, rendez-vous à l'adresse suivante : <br><br/> 
+<a href= "{{ confirmationUrl }}">{{ confirmationUrl }}</a><br><br/> 
+
+	Quand votre mot de passe aura été créé, vous aurez accès aux services sécurisés de votre compte <a href="{{ absolute_url }}"> {{ app_name }} </a>
+à l'adresse suivante: <br><br/>
+	<a href="{{ absolute_url }}">{{ absolute_url }}</a>
+	{% endif %}
+
+{% endblock %}

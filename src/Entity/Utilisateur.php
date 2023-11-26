@@ -89,6 +89,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     #[Assert\NotBlank(message: 'Le mot de passe n\'est pas identique.')]
     private $passwordConfirm;
 
+    #[ORM\OneToMany(mappedBy: 'utilisasteur', targetEntity: RendezVous::class)]
+    private Collection $rendezVouses;
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Tchat::class, orphanRemoval: true)]
+    private Collection $tchats;
+
 
 
     public function __construct()
@@ -101,6 +107,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         $this->nbConnexionKO = 0;
         $this->messages = new ArrayCollection();
         $this->dateCreation = new \DateTime();
+        $this->rendezVouses = new ArrayCollection();
+        $this->tchats = new ArrayCollection();
     }
 
     public function getNom(): ?string
@@ -170,12 +178,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
 
     public function getRecevoirNotifSchool(): ?bool
     {
-        return $this->recevoirNotifSignac;
+        return $this->recevoirNotifSchool;
     }
 
-    public function setRecevoirNotifSchool(?bool $recevoirNotifSignac): static
+    public function setRecevoirNotifSchool(?bool $recevoirNotifSchool): static
     {
-        $this->recevoirNotifSignac = $recevoirNotifSignac;
+        $this->recevoirNotifSchool = $recevoirNotifSchool;
 
         return $this;
     }
@@ -515,6 +523,66 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     public function setPasswordConfirm(string $passwordConfirm): self
     {
         $this->passwordConfirm = $passwordConfirm;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RendezVous>
+     */
+    public function getRendezVouses(): Collection
+    {
+        return $this->rendezVouses;
+    }
+
+    public function addRendezVouse(RendezVous $rendezVouse): static
+    {
+        if (!$this->rendezVouses->contains($rendezVouse)) {
+            $this->rendezVouses->add($rendezVouse);
+            $rendezVouse->setUtilisasteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezVouse(RendezVous $rendezVouse): static
+    {
+        if ($this->rendezVouses->removeElement($rendezVouse)) {
+            // set the owning side to null (unless already changed)
+            if ($rendezVouse->getUtilisasteur() === $this) {
+                $rendezVouse->setUtilisasteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tchat>
+     */
+    public function getTchats(): Collection
+    {
+        return $this->tchats;
+    }
+
+    public function addTchat(Tchat $tchat): static
+    {
+        if (!$this->tchats->contains($tchat)) {
+            $this->tchats->add($tchat);
+            $tchat->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTchat(Tchat $tchat): static
+    {
+        if ($this->tchats->removeElement($tchat)) {
+            // set the owning side to null (unless already changed)
+            if ($tchat->getUtilisateur() === $this) {
+                $tchat->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }

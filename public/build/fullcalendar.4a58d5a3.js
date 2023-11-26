@@ -1,0 +1,1 @@
+(self.webpackChunkschool_app=self.webpackChunkschool_app||[]).push([[7630],{15726:()=>{document.addEventListener("DOMContentLoaded",(function(){var e=document.getElementById("calendar");new FullCalendar.Calendar(e,{initialView:"dayGridMonth"}).render()}))}},e=>{var n;n=15726,e(e.s=n)}]);

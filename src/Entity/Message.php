@@ -20,6 +20,9 @@ class Message implements GenericTraitInterface
     #[ORM\JoinColumn(name: 'destinataire', nullable: false)]
     private ?Utilisateur $destinataire;
 
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'messages')]
+    #[ORM\JoinColumn(name: 'expediteur', nullable: false)]
+    private ?Utilisateur $expediteur;
 
     #[ORM\Column(name: 'objet', type: 'string', length: 255)]
     private ?string $objetMessage;
@@ -66,6 +69,14 @@ class Message implements GenericTraitInterface
     {
         return $this->destinataire;
     }
+
+    public function setExpediteur(?Utilisateur $expediteur): static
+    {
+        $this->expediteur = $expediteur;
+
+        return $this;
+    }
+
     public function getExpediteur(): ?Utilisateur
     {
         return $this->expediteur;

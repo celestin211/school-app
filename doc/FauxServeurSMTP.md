@@ -46,3 +46,7 @@ Il faut utliser le port 25
 ```
 MAILER_DSN=smtp://localhost:25
 ```
+Serveur de lancement
+```
+php -S localhost:9030 -t public
+```

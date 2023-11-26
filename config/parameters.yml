@@ -17,6 +17,9 @@ parameters:
     app.autocomplete: '%env(APP_AUTOCOMPLETE)%'
     bac.absolute_url : '%env(APP_ABSOLUTE_URL)%'
     bac.errors.subject: 'SCHOOL : erreur sur %env(APP_ENVIRONNEMENT)% '
+    bac.twilio_account_sid: '%env(TWILIO_ACCOUNT_SID)%'
+    bac.twilio_api_key_sid: '%env(TWILIO_API_KEY_SID)%'
+    bac.twilio_api_key_secret:  '%env(TWILIO_API_KEY_SECRET)%'
     app.errors.to_email: [ 'celestin.mombela@yahoo.fr']
     bac.defaultPassword: SCHOOL
     bac.matomo_site_id: '%env(MATOMO_SITE_ID)%'

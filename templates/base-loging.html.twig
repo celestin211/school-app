@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('logo-bosongo.840f550f.jpg') }}">
     <link rel="icon" type="image/png" href="{{path('bac_homepage') }}">
     <title>
-        BOSONGO
+Clever-School
     </title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -44,7 +44,7 @@
             <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
                 <div class="container-fluid">
                     <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="{{ path('bac_homepage') }}">
-                        Argon Dashboard 2
+                        Clever-School
                     </a>
                     <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
@@ -62,27 +62,21 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link me-2" href="../pages/profile.html">
-                                    <i class="fa fa-user opacity-6 text-dark me-1" aria-hidden="true"></i>
-                                    Profile
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link me-2" href="{{ path('utilisateur_new') }}">
                                     <i class="fas fa-user-circle opacity-6 text-dark me-1" aria-hidden="true"></i>
-                                    Sign Up
+                        Créer un compte
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link me-2" href="{{ path('app_login') }}">
                                     <i class="fas fa-key opacity-6 text-dark me-1" aria-hidden="true"></i>
-                                    Sign In
+                       Connexion
                                 </a>
                             </li>
                         </ul>
                         <ul class="navbar-nav d-lg-block d-none">
                             <li class="nav-item">
-                                <a href="https://www.creative-tim.com/product/argon-dashboard" class="btn btn-sm mb-0 me-1 btn-primary">Free Download</a>
+                                <a href="https://www.creative-tim.com/product/argon-dashboard" class="btn btn-sm mb-0 me-1 btn-primary">Utilisation et Faq</a>
                             </li>
                         </ul>
                     </div>
@@ -93,9 +87,6 @@
     </div>
 </div>
 <div class="container">
-    <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 text-white" href="{{path('bac_homepage') }}">
-        Argon Dashboard 2
-    </a>
     <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon mt-2">
           <span class="navbar-toggler-bar bar1"></span>
@@ -108,7 +99,7 @@
             <li class="nav-item">
                 <a class="nav-link d-flex align-items-center me-2 active" aria-current="page" href="../pages/dashboard.html">
                     <i class="fa fa-chart-pie opacity-6  me-1" aria-hidden="true"></i>
-                    Dashboard
+                    Clever-School
                 </a>
             </li>
             <li class="nav-item">
@@ -126,7 +117,7 @@
             <li class="nav-item">
                 <a class="nav-link me-2" href="../pages/sign-in.html">
                     <i class="fas fa-key opacity-6  me-1" aria-hidden="true"></i>
-                    Sign In
+                    Se connecter
                 </a>
             </li>
         </ul>
@@ -146,8 +137,9 @@
                     <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
                         <div class="card card-plain">
                             <div class="card-header pb-0 text-start">
-                                <h4 class="font-weight-bolder">Sign In</h4>
-                                <p class="mb-0">Enter your email and password to sign in</p>
+                                <h4 class="font-weight-bolder">Se connecter</h4>
+                                <p class="mb-0">Suivez les infos pour vous connecter
+                                </p>
                             </div>
                             {% if error.message is defined %}
                                 <div class="has-error">
@@ -157,7 +149,7 @@
                                             {{ error.message }},
                                             ou bien contacter l'administrateur sur :
                                             <a href="https://cisirh.service-now.com/" class="text-center">
-                                                CISIRH NOW
+                                               MBEKATEAM
                                             </a>
                                         {% else %}
                                             {{ error.message|trans(error.messageData, 'security') }}
@@ -194,8 +186,8 @@
                                                placeholder="Mot de passe" aria-label="Password"/>
                                     </div>
                                     <div class="form-check form-switch">
-                                        <input type="checkbox" id="remember_me" name="_remember_me" class="form-check-input" > Se souvenir de moi
-                                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        <input type="checkbox" id="remember_me" name="_remember_me" class="form-check-input" >
+                                        <label class="form-check-label" for="rememberMe">Se souvenir de moie</label>
                                     </div>
 
                                     <div class="text-center">
@@ -207,13 +199,11 @@
                             </div>
                             <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                 <p class="mb-4 text-sm mx-auto">
-                                    Don't have an account?
-                                    <a href="{{path('utilisateur_new')}}" class="text-primary text-gradient font-weight-bold">Sign up</a>
+                                   Vous avez pas encore de compte ?
+                                    <a href="{{path('utilisateur_new')}}" class="text-primary text-gradient font-weight-bold">Créer un compte</a>
                                 </p>
                                 {% block pwd_oublie %}
-                                    <a href="{{ path('demande_reinitialisation_mot_de_passe') }}">Mot de passe oublié</a><br>
-                                    <a href="https://cisirh.service-now.com/" class="text-center">Demande d'ouverture de compte via CISIRH
-                                        Now</a>
+                                    <a href="{{ path('demande_reinitialisation_mot_de_passe') }}">Mot de passe oublié?</a><br>
                                 {% endblock pwd_oublie %}
                             </div>
                         </div>

@@ -1,0 +1,42 @@
+{% macro text_row(value, options) %}
+    {% set attr = options.attr|default('') %}
+    {% set raw = options.raw|default(false) %}
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+            {{ options.label }}
+            {% if options.info is defined and options.info is not empty %}
+                &nbsp;<a href="#" data-toggle="popover-info" title="{% if options.infoTitle is defined %}{{ options.infoTitle }}{% else %}{{ value }}{% endif %}" data-html="true" data-content="{{ options.info }}" data-trigger="hover"><i class="fa fa-info-circle"></i></a>
+            {% endif %}
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            {% if options.icone is defined %}
+            <div class="input-group">
+                <div class="input-group-addon input-group-addon-disabled"><i class="{{options.icone}}"></i></div>
+                {% endif %}
+
+                <div class="well app-well">
+                    {% if raw %}
+                        {{ value|raw }}
+                    {% else %}
+                        {{ value|nl2br }}
+                    {% endif %}
+                </div>
+                {% if options.icone is defined %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro textarea_row(value, options) %}
+    <div class="form-group">
+        {% if options.label is defined %}
+            <label class="control-label">{{options.label}}</label>
+        {% endif %}
+        <div class="well app-well-lg ">
+            {{ value | nl2br }}
+        </div>
+    </div>
+{% endmacro %}

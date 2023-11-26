@@ -1,0 +1,58 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    password_hashers:
+        App\Entity\Utilisateur:
+            algorithm: auto
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_ELEVE, ROLE_PROFESSEUR, ROLE_ADMIN_VIP]
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\Utilisateur
+                property: email
+        #users_in_memory: { memory: null }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        sso:
+            request_matcher: App\Security\RequestMatcher\SsoRequestMatcher
+            logout: ~
+            custom_authenticators:
+                - App\Security\HeaderAuthenticator
+
+        main:
+            lazy: true
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: '%bac.se.souvenir.de.moi%'
+                secure: true
+            provider: app_user_provider
+            custom_authenticators:
+                - App\Security\LoginFormAuthenticator
+                - App\Security\ChangePasswordAuthenticator
+            user_checker: App\Security\UserChecker
+
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                target: app_login
+
+
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+
+    access_control:
+        #         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_USER }

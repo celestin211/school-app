@@ -1,0 +1,1 @@
+(self.webpackChunkschool_app=self.webpackChunkschool_app||[]).push([[2995],{63195:()=>{var e,o,t;e=document.querySelector(".main"),o=document.querySelector(".burger-button"),t=document.querySelector(".navigation"),o&&o.addEventListener("click",(function(o){e.classList.toggle("is-opened"),t.focus(),o.preventDefault()}),!1)}},e=>{var o;o=63195,e(e.s=o)}]);
