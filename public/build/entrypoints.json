@@ -5,14 +5,33 @@
         "/build/runtime.f45ba032.js",
         "/build/9989.055ff40f.js",
         "/build/7151.abef50ec.js",
-        "/build/4561.fb2e4a47.js",
+        "/build/5884.40f35091.js",
         "/build/1369.f05e1277.js",
         "/build/745.e7dec0c0.js",
-        "/build/app.8f43ef0f.js"
+        "/build/app.a7927ca7.js"
       ],
       "css": [
         "/build/1058.51245d23.css",
-        "/build/app.8de52cec.css"
+        "/build/app.0d0f2847.css"
+      ]
+    },
+    "fullcalendar": {
+      "js": [
+        "/build/runtime.f45ba032.js",
+        "/build/fullcalendar.4a58d5a3.js"
+      ]
+    },
+    "modal-supprime": {
+      "js": [
+        "/build/runtime.f45ba032.js",
+        "/build/9989.055ff40f.js",
+        "/build/modal-supprime.3f1cc6d5.js"
+      ]
+    },
+    "darkmode": {
+      "js": [
+        "/build/runtime.f45ba032.js",
+        "/build/darkmode.5f1f7113.js"
       ]
     },
     "dropdown": {
@@ -54,6 +73,15 @@
       ],
       "css": [
         "/build/dropdown-styles.91a4ae62.css"
+      ]
+    },
+    "modal": {
+      "js": [
+        "/build/runtime.f45ba032.js",
+        "/build/modal.1aafad7d.js"
+      ],
+      "css": [
+        "/build/modal.1fdbf6e3.css"
       ]
     },
     "flash-bag": {
@@ -126,12 +154,12 @@
         "/build/runtime.f45ba032.js",
         "/build/9989.055ff40f.js",
         "/build/7151.abef50ec.js",
-        "/build/4561.fb2e4a47.js",
-        "/build/6291.f6cd2799.js",
+        "/build/5884.40f35091.js",
+        "/build/2676.20e8669f.js",
         "/build/2188.02b54f50.js",
-        "/build/3915.76b77bb1.js",
-        "/build/4712.2e85059c.js",
-        "/build/bootstrap.bundle.min.b798ab75.js"
+        "/build/3964.52f4c848.js",
+        "/build/6767.e8e96036.js",
+        "/build/bootstrap.bundle.min.4f4f3151.js"
       ]
     },
     "bootstrap.min": {
@@ -139,12 +167,12 @@
         "/build/runtime.f45ba032.js",
         "/build/9989.055ff40f.js",
         "/build/7151.abef50ec.js",
-        "/build/4561.fb2e4a47.js",
-        "/build/6291.f6cd2799.js",
+        "/build/5884.40f35091.js",
+        "/build/2676.20e8669f.js",
         "/build/2188.02b54f50.js",
-        "/build/4712.2e85059c.js",
-        "/build/7543.aa9f5858.js",
-        "/build/bootstrap.min.2af810ca.js"
+        "/build/6767.e8e96036.js",
+        "/build/1402.e44b418a.js",
+        "/build/bootstrap.min.1fda7fda.js"
       ]
     },
     "popper.min": {
@@ -152,10 +180,10 @@
         "/build/runtime.f45ba032.js",
         "/build/9989.055ff40f.js",
         "/build/7151.abef50ec.js",
-        "/build/4561.fb2e4a47.js",
-        "/build/6291.f6cd2799.js",
-        "/build/3915.76b77bb1.js",
-        "/build/popper.min.e739348d.js"
+        "/build/5884.40f35091.js",
+        "/build/2676.20e8669f.js",
+        "/build/3964.52f4c848.js",
+        "/build/popper.min.3a6c6d9f.js"
       ]
     },
     "bootstrap-notify": {
@@ -179,12 +207,13 @@
         "/build/runtime.f45ba032.js",
         "/build/9989.055ff40f.js",
         "/build/7151.abef50ec.js",
-        "/build/4561.fb2e4a47.js",
-        "/build/6291.f6cd2799.js",
+        "/build/5884.40f35091.js",
+        "/build/2676.20e8669f.js",
         "/build/2188.02b54f50.js",
-        "/build/3915.76b77bb1.js",
-        "/build/4712.2e85059c.js",
-        "/build/chartjs.min.9df08b7d.js"
+        "/build/3964.52f4c848.js",
+        "/build/6767.e8e96036.js",
+        "/build/7553.6ca4ec8d.js",
+        "/build/chartjs.min.037c5879.js"
       ]
     },
     "perfect-scrollbar.min": {
@@ -201,11 +230,11 @@
         "/build/runtime.f45ba032.js",
         "/build/9989.055ff40f.js",
         "/build/7151.abef50ec.js",
-        "/build/4561.fb2e4a47.js",
-        "/build/6291.f6cd2799.js",
+        "/build/5884.40f35091.js",
+        "/build/2676.20e8669f.js",
         "/build/2188.02b54f50.js",
         "/build/2555.09cb5d75.js",
-        "/build/smooth-scrollbar.min.099b6fab.js"
+        "/build/smooth-scrollbar.min.15367823.js"
       ]
     },
     "proscroll": {
@@ -226,9 +255,18 @@
         "/build/runtime.f45ba032.js",
         "/build/9989.055ff40f.js",
         "/build/7151.abef50ec.js",
-        "/build/4561.fb2e4a47.js",
+        "/build/5884.40f35091.js",
         "/build/1369.f05e1277.js",
-        "/build/video-calling/video-call.index.e3e5b217.js"
+        "/build/video-calling/video-call.index.de6c3882.js"
+      ]
+    },
+    "tchat-app-video": {
+      "js": [
+        "/build/runtime.f45ba032.js",
+        "/build/9989.055ff40f.js",
+        "/build/7151.abef50ec.js",
+        "/build/3964.52f4c848.js",
+        "/build/tchat-app-video.03f59046.js"
       ]
     },
     "cours.index": {
@@ -262,6 +300,15 @@
       ],
       "css": [
         "/build/toggle-menu-open.5e5167fb.css"
+      ]
+    },
+    "video-tchat": {
+      "js": [
+        "/build/runtime.f45ba032.js",
+        "/build/video-tchat.4af296d1.js"
+      ],
+      "css": [
+        "/build/video-tchat.a809ae09.css"
       ]
     },
     "video": {

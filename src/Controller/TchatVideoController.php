@@ -17,9 +17,10 @@ class TchatVideoController extends AbstractController
     #[Route(path: '/access_token', name: 'access_token', methods: ['POST', 'GET'])]
     public function generate_token(Request $request):JsonResponse
     {
-        $accountSid = 'AC6c97f1277f772056ea6954a900c639e1';
-        $apiKeySid = 'SK93f5d8a3e27a196dfc6d6ad946d88416';
-        $apiKeySecret = 'oZ6Kr6oURbXvXyQLb9QdiuENMDkhl2bP';
+        $accountSid   =     putenv('TWILIO_ACCOUNT_SID');
+        $apiKeySid    =     putenv('TWILIO_API_KEY_SID');
+        $apiKeySecret =     putenv('TWILIO_API_KEY_SECRET');
+
 
         $identity = uniqid();
 
@@ -45,7 +46,7 @@ class TchatVideoController extends AbstractController
     #[Route(path: 'room', name: 'room', methods: ['GET'])]
     public function index()
     {
-        return $this->render('token/enter-animation.html.twig', [
+        return $this->render('token/index.html.twig', [
             'controller_name' => 'TokenController',
         ]);
     }

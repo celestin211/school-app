@@ -10,8 +10,10 @@ use App\Form\Security\DemandeReinitialisationPasswordType;
 use App\Form\Security\ReinitialisationPasswordType;
 use App\Manager\SecurityManager;
 use App\Security\SecurityVoter;
+use App\Util\ApiUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +36,27 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/login", name="api_user_login", methods={"POST"})
+     * @param AuthenticationUtils $authenticationUtils
+     * @param ApiUtils $apiUtils
+     * @return Response
+     */
+    public function login_user(AuthenticationUtils $authenticationUtils, ApiUtils $apiUtils)
+    {
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+
+        $apiUtils->successResponse("");
+
+        return new JsonResponse($apiUtils->getResponse(), Response::HTTP_OK);
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

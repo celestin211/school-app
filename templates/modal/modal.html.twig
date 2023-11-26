@@ -1,26 +1,22 @@
-<!-- Button trigger modal -->
-<button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Launch demo modal
-</button>
+<section class="modal container_modal">
+    <button class="modal__button" id="open-modal">
+        Open Modal
+    </button>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal__container" id="modal-container">
+        <div class="modal__content">
+            <div class="modal__close close-modal" title="Close">
+                <i class='bx bx-x'></i>
             </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn bg-gradient-primary">Save changes</button>
-            </div>
+            <p class="modal__description">Voulez-vous supprimer cet élément ?</p>
+
+            <button class="modal__button modal__button-width">
+              Fermé
+            </button>
+
+            <button class="modal__button-link close-modal">
+          Supprimé
+            </button>
         </div>
     </div>
-</div>
-
+</section>

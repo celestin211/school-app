@@ -2,150 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import Video from "twilio-video";
 
-
 const Chat = () => {
-
 	const [roomName, setRoomName] = useState('');
 	const [hasJoinedRoom, setHasJoinedRoom] = useState(false);
-	
-	const connectToRoom = (token) => {
-		const { connect, createLocalVideoTrack } = Video;
-		
-		let connectOption = { name: roomName };
-		
-		connect( token, connectOption).then(room => {
-			
-			console.log(`Successfully joined a Room: ${room}`);
-			
-			const videoChatWindow = document.getElementById('video-chat-window');
-			const muteAudio = 	document.getElementById('muteAudio');
-			const stopVideo = 	document.getElementById('stopVideo');
-			const unmuteAudio = document.getElementById('unmuteAudio');
-			const startVideo = 	document.getElementById('startVideo');
-			
-			startVideo.addEventListener('click', () => {
-				room.localParticipant.videoTracks.forEach(track => {
-					track.enable();
-				});
-			});
-			
-			
-			unmuteAudio.addEventListener('click', () => {
-				room.localParticipant.audioTracks.forEach(track => {
-					track.enable();
-				});
-			});
-			stopVideo.addEventListener('click', () => {
-				room.localParticipant.videoTracks.forEach(track => {
-					track.disable();
-				});
-			})
-			muteAudio.addEventListener('click', () => {
-				room.localParticipant.audioTracks.forEach(track => {
-					track.disable();
-				});
-			});
-			createLocalVideoTrack().then(track => {
-				videoChatWindow.appendChild(track.attach());
-			});
-			
-			createLocalVideoTrack().then(localVideoTrack => {
-				return room.localParticipant.publishTrack(localVideoTrack);
-			}).then(publication => {
-				console.log('Successfully unmuted your video:', publication);
-			});
-			
-			room.on('disconnected', room => {
-				// Detach the local media elements
-				room.localParticipant.tracks.forEach(publication => {
-					const attachedElements = publication.track.detach();
-					attachedElements.forEach(element => element.remove());
-				});
-			});
-
-// To disconnect from a Room
-			room.disconnect();
-			room.localParticipant.audioTracks.forEach(publication => {
-				publication.track.disable();
-			});
-			
-			room.localParticipant.videoTracks.forEach(publication => {
-				publication.track.disable();
-			});
-			
-			room.localParticipant.audioTracks.forEach(publication => {
-				publication.track.enable();
-			});
-			
-			room.localParticipant.videoTracks.forEach(publication => {
-				publication.track.enable();
-			});
-			
-			room.localParticipant.videoTracks.forEach(publication => {
-				publication.track.stop();
-				publication.unpublish();
-			});
-			
-			function handleTrackDisabled(track) {
-				track.on('disabled', () => {
-					/* Hide the associated <video> element and show an avatar image. */
-				});
-			}
-			
-			room.participants.forEach(participant => {
-				participant.tracks.forEach(publication => {
-					if (publication.isSubscribed) {
-						handleTrackDisabled(publication.track);
-					}
-					publication.on('subscribed', handleTrackDisabled);
-				});
-			});
-			room.participants.forEach(participant => {
-				participant.tracks.forEach(publication => {
-					publication.on('subscribed', () => {
-						/* Hide the avatar image and show the associated <video> element. */
-					});
-				});
-			});
-			function handleTrackEnabled(track) {
-				track.on('enabled', () => {
-					/* Hide the avatar image and show the associated <video> element. */
-				});
-			}
-			
-			room.participants.forEach(participant => {
-				participant.tracks.forEach(publication => {
-					if (publication.isSubscribed) {
-						handleTrackEnabled(publication.track);
-					}
-					publication.on('subscribed', handleTrackEnabled);
-				});
-			});
-			room.on('participantConnected', participant => {
-				console.log(`Participant "${participant.identity}" connected`);
-				
-				participant.tracks.forEach(publication => {
-					if (publication.isSubscribed) {
-						const track = publication.track;
-						videoChatWindow.appendChild(track.attach());
-					}
-				});
-				
-				participant.on('trackSubscribed', track => {
-					videoChatWindow.appendChild(track.attach());
-					console.log(participant, length);
-				});
-			});
-		}, error => {
-			console.error(`Unable to connect to Room: ${error.message}`);
-		});
-	};
-
 	
 	const joinChat = event => {
 		event.preventDefault();
 		if (roomName) {
-			axios.post('access_token', { roomName }, ).then((response) => {
+			axios.post('/access_token', { roomName }, ).then((response) => {
 				connectToRoom(response.data.token);
 				setHasJoinedRoom(true);
 				setRoomName('');
@@ -158,74 +22,30 @@ const Chat = () => {
 		}
 	};
 	
+	
 	return(
-		<div className="row justify-content-center">
-			<div className="container-enter">
-				<div className="card z-index-0 mb-7">
-				{!hasJoinedRoom && (
-					<div className="card-body">
-					<form className="form-inline" onSubmit={joinChat}>
-						<div className="mb-3">
-						<input type="text" name={'roomName'} className={"form-control"} id="roomName"
-							   placeholder="Enter a room name" value={roomName} onChange={event => setRoomName(event.target.value)}/>
-						</div>
-						<div className="text-center">
-							<button type="submit" className="btn bg-gradient-dark btn-lg w-100 my-4 mb-2">Entrer</button></div>
-					</form>
-					</div>
-				)}
-				</div>
-		
-	<div id="video-chat-window" className="	row-video">
-	<nav className="tools-kit">
-		
-		<ul className="items-video">
-			<li className="item"><img src="https://i.postimg.cc/L8zxQBhv/live.png" className="active"></img></li>
-			<li className=""><img src="https://i.postimg.cc/JnggC78Q/video.png"></img></li>
-			<li className="item"><img src="https://i.postimg.cc/vmb3JgVy/message.png"></img></li>
-			<li className="item"><img src="https://i.postimg.cc/qR7Q7PwZ/notification.png"></img></li>
-			<li className="item"><img src="https://i.postimg.cc/k4DZH604/users.png"></img></li>
-			<li className="item"><img src="https://i.postimg.cc/v84Fqkyz/setting.png"></img></li>
-		</ul>
-	</nav>
-	<div className="container-video">
-		<div className="row-video">
-			<div className="col-1-video">
-				<img src="https://i.postimg.cc/521rVkhD/image.png" className="host-img"></img>
-					<div className="contarols">
-						<img src="https://i.postimg.cc/3NVtVtgf/chat.png"></img>
-							<img src="https://i.postimg.cc/BQPYHG0r/disconnect.png"></img>
-						<img src="https://i.postimg.cc/fyJH8G00/call.png" className="call-icon"></img>
-									<img src="https://i.postimg.cc/bJFgSmFY/mic.png"></img>
-										<img src="https://i.postimg.cc/Y2sDvCJN/cast.png"></img>
-					</div>
+		<div className="container">
+			<div className={"col-md-12"}>
+				<h1 className="text-title">Symfony React Video Chat</h1>
 			</div>
-			<div className="col-2-video">
-				<div className="joined">
-					<p>People Joined</p>
-					<div>
-						<img src="https://i.postimg.cc/WzFnG0QG/people-1.png"></img>
-						<img src="https://i.postimg.cc/fRhGbb92/people-2.png"></img>
-						<img src="https://i.postimg.cc/02mgxSbK/people-3.png"></img>
-						<img src="https://i.postimg.cc/K8rd3y7Z/people-4.png"></img>
-						<img src="https://i.postimg.cc/HWFGfzsC/people-5.png"></img>
-					</div>
+			
+			<div className="col-md-6">
+				<div className={"mb-5 mt-5"}>
+					{!hasJoinedRoom && (
+						<form className="form-inline" onSubmit={joinChat}>
+							<input type="text" name={'roomName'} className={"form-control"} id="roomName"
+								   placeholder="Enter a room name" value={roomName} onChange={event => setRoomName(event.target.value)}/>
+							
+							<button type="submit" className="btn btn-primary">Join Room</button>
+						
+						</form>
+					)}
+				
 				</div>
-				<div className="invite">
-					<p>Invite More People</p>
-					<div>
-						<img src="https://i.postimg.cc/7LHjgQXS/user-1.png"></img>
-						<img src="https://i.postimg.cc/q71SQXZS/user-2.png"></img>
-						<img src="https://i.postimg.cc/h4kwCGpD/user-3.png"></img>
-						<img src="https://i.postimg.cc/GtyfL0hn/user-4.png"></img>
-						<img src="https://i.postimg.cc/FFd8gSbC/user-5.png"></img>
-					</div>
-				</div>
+				<div id="video-chat-window"></div>
 			</div>
 		</div>
-	</div>
-	</div></div></div>
-)
+	)
 };
 
 export default Chat;

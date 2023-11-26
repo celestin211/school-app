@@ -13,6 +13,7 @@ import './styles/school-dashboard.css';
 import './styles/video-enter.css';
 import './styles/toggle-menu-open.css';
 import './styles/dropdown-styles.css';
+import './styles/video-tchat.css';
 // start the Stimulus application
 import React from 'react';
 import Chat from './js/video-calling/video-call.index';
