@@ -68,7 +68,7 @@ class SchoolMailService
     public function notifierTerminerCampagne(Campagne $campagne, Utilisateur $utilisateur)
     {
         // Notifier tous les utilisateur sauf l'acteur
-        $subject = 'SIGNAC : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Terminée';
+        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Terminée';
         $template = 'Mail/Campagne/TERMINEE/notification_min.html.twig';
 
         $this->notifierActifsSaufAdminEtActeur($campagne, $utilisateur, $subject, $template);
@@ -78,7 +78,7 @@ class SchoolMailService
     public function notifierCloturerCampagne(Campagne $campagne)
     {
         // Notifier tous les utilisateur sauf l'acteur
-        $subject = 'SIGNAC : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Clôturée';
+        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Clôturée';
         $template = 'Mail/Campagne/CLOTUREE/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_DGAFP', 'ROLE_MIN', 'ROLE_MIN_VAL']);
@@ -97,7 +97,7 @@ class SchoolMailService
 
     public function notifierOuvrirCampagne(Campagne $campagne)
     {
-        $subject = 'SIGNAC : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Ouverte';
+        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Ouverte';
 
         // notifier les utilisateurs DGAFP
         /** @var array $utilisateursActifs */
@@ -148,7 +148,7 @@ class SchoolMailService
 
     public function notifierSupprimerCampagne(Campagne $campagne, Utilisateur $utilisateur = null)
     {
-        $subject = 'SIGNAC : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Suppression';
+        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Suppression';
         $template = 'Mail/Campagne/SUPPRIMEE/suppression.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_DGAFP', 'ROLE_MIN', 'ROLE_MIN_VAL']);
@@ -170,7 +170,7 @@ class SchoolMailService
     // Envoyer un rappel aux ministères qui n'ont pas soumis une liste avant le délai de rappel
     public function envoyerRappel(Campagne $campagne, Ministere $ministere = null, Utilisateur $utilisateur = null)
     {
-        $subject = 'SIGNAC : '.$campagne->getTypeCampagneImpressionLong()." : Envoyez votre liste d'alimentation";
+        $subject = 'SCHOOL : '.$campagne->getTypeCampagneImpressionLong()." : Envoyez votre liste d'alimentation";
         $template = 'Mail/rappels/rappelMinisteres.html.twig';
 
         // Si $ministere==NULL: il s'agit d'un rappel destiné à un utilisateur
@@ -190,7 +190,7 @@ class SchoolMailService
     {
         $campagne = $this->em->getRepository(Campagne::class)->find($campagneId);
 
-        $subject = 'SIGNAC : Campagne "'.$campagne->getTypeCampagneImpressionLong()."\" : Suppression de votre liste d'agents";
+        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpressionLong()."\" : Suppression de votre liste d'agents";
         $template = 'Mail/SUPPRIMEE/notification.html.twig';
 
         // Envoyer une notif à l'auteur de la liste si ce n'est pas lui qui fait l'action, s'il est activé et n'est pas bloqué
@@ -224,7 +224,7 @@ class SchoolMailService
         }
 
         // Notifier les valideurs
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Réception d'une liste d'agents";
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Réception d'une liste d'agents";
         $template = 'Mail/ENVOYEE/notification_val.html.twig';
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN_VAL'], $liste->getMinistere());
         // Envoyer une notification aux valideurs
@@ -240,7 +240,7 @@ class SchoolMailService
     public function notifierValidationMinistere(ListeAlimentation $liste)
     {
         // Notification des gestionnaires et des autres valideurs
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : validation ministère';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : validation ministère';
         $template = 'Mail/VALIDEE_MINISTERE/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN', 'ROLE_MIN_VAL'], $liste->getMinistere());
@@ -255,7 +255,7 @@ class SchoolMailService
         }
 
         // Notification de la DGAFP
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Liste en attente de validation';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Liste en attente de validation';
         $template = 'Mail/VALIDEE_MINISTERE/notification_dgafp.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateursDgafp();
@@ -274,7 +274,7 @@ class SchoolMailService
     public function notifierRejetMin(ListeAlimentation $liste, Utilisateur $acteur)
     {
         // Notification de tous les utilisateurs du ministère
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet du valideur';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet du valideur';
 
         $template = 'Mail/REJETEE_MINISTERE/notification_min.html.twig';
 
@@ -298,7 +298,7 @@ class SchoolMailService
     public function notifierValidationDGAFP(ListeAlimentation $liste)
     {
         // Notification de tous les utilisateurs du ministère
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Validation DGAFP';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Validation DGAFP';
         $template = 'Mail/VALIDEE_DGAFP/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN', 'ROLE_MIN_VAL'], $liste->getMinistere());
@@ -318,7 +318,7 @@ class SchoolMailService
     public function notifierRejetDGAFP(ListeAlimentation $liste)
     {
         // Notification de tous les utilisateurs du ministère
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet DGAFP';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet DGAFP';
         $template = 'Mail/REJETEE_DGAFP/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN', 'ROLE_MIN_VAL'], $liste->getMinistere());
@@ -337,7 +337,7 @@ class SchoolMailService
     public function notifierEnvoiPromouvables(ListeAlimentation $liste)
     {
         // Notifier les gestionnaires
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Accusé de réception de la liste des promouvables';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Accusé de réception de la liste des promouvables';
         $template = 'Mail/ENVOYEE_PROMOUVABLES/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN'], $liste->getMinistere());
@@ -353,7 +353,7 @@ class SchoolMailService
         }
 
         // Notifier les valideurs
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Réception de la liste des promouvables';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Réception de la liste des promouvables';
         $template = 'Mail/ENVOYEE_PROMOUVABLES/notification_val.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN_VAL'], $liste->getMinistere());
@@ -372,7 +372,7 @@ class SchoolMailService
     public function notifierValidationMinPromouvables(ListeAlimentation $liste, Utilisateur $valideur)
     {
         // Notifier tous les utilisateurs du ministère
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Validation ministère de la liste des promouvables';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Validation ministère de la liste des promouvables';
         $template = 'Mail/VALIDEE_PROMOUVABLES_MINISTERE/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN', 'ROLE_MIN_VAL'], $liste->getMinistere());
@@ -391,7 +391,7 @@ class SchoolMailService
         }
 
         // Notifier la DGAFP
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Réception d'une liste des promouvables";
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Réception d'une liste des promouvables";
         $template = 'Mail/VALIDEE_PROMOUVABLES_MINISTERE/notification_dgafp.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateursDgafp();
@@ -410,7 +410,7 @@ class SchoolMailService
     public function notifierRejetPromouvablesMin(ListeAlimentation $liste, Utilisateur $acteur)
     {
         // Notification de tous les utilisateurs du ministère
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet de la liste des promouvables';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet de la liste des promouvables';
 
         $template = 'Mail/REJETEE_PROMOUVABLES_MINISTERE/notification_min.html.twig';
 
@@ -434,7 +434,7 @@ class SchoolMailService
     public function notifierValidationPromouvablesDGAFP(ListeAlimentation $liste, Utilisateur $acteur)
     {
         // Notifier tous les utilisateurs du ministère
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Validation DGAFP de la liste des promouvables';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Validation DGAFP de la liste des promouvables';
 
         $template = 'Mail/VALIDEE_PROMOUVABLES_DGAFP/notification_min.html.twig';
 
@@ -456,7 +456,7 @@ class SchoolMailService
     public function notifierRejetPromouvablesDGAFP(ListeAlimentation $liste, Utilisateur $acteur)
     {
         // Notifier Tous les utilisateurs du ministère
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet DGAFP de la liste des promouvables';
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Rejet DGAFP de la liste des promouvables';
         $template = 'Mail/REJETEE_PROMOUVABLES_DGAFP/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_MIN', 'ROLE_MIN_VAL'], $liste->getMinistere());
@@ -476,7 +476,7 @@ class SchoolMailService
     // Envoyer une notification aux utilisateurs ayant le rôle DGAFP
     public function notifierExpirerCampagne(Campagne $campagne)
     {
-        $subject = 'SIGNAC : Campagne "'.$campagne->getTypeCampagneImpression().'" : Expirée';
+        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpression().'" : Expirée';
         $template = 'Mail/Campagne/EXPIREE/notification_DGAFP.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateursDgafp();
@@ -559,7 +559,7 @@ class SchoolMailService
     // Fonction d'envoi de mail de notification aux utilisateurs actifs ayant le rôle DGAFP
     public function notifierDevalidationListePromouvables(ListeAlimentation $liste)
     {
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Dévalidation de la liste des promouvables du Ministère '.$liste->getMinistere()->getLibelleCourt();
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Dévalidation de la liste des promouvables du Ministère '.$liste->getMinistere()->getLibelleCourt();
 
         $template = 'Mail/DEVALIDATION/devalidation_liste_promouvables.html.twig';
 
@@ -569,7 +569,7 @@ class SchoolMailService
     // Fonction d'envoi de mail de notification aux utilisateurs actifs ayant le rôle DGAFP
     public function notifierDevalidationFichesProposition(ListeAlimentation $liste)
     {
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Dévalidation des fiches de proposition du Ministère '.$liste->getMinistere()->getLibelleCourt();
+        $subject = 'SCHOOL : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression().'" : Dévalidation des fiches de proposition du Ministère '.$liste->getMinistere()->getLibelleCourt();
 
         $template = 'Mail/DEVALIDATION/devalidation_fiches_proposition.html.twig';
 
@@ -579,7 +579,7 @@ class SchoolMailService
     // Fonction d'envoi de mail de notification aux utilisateurs actifs ayant le rôle DGAFP
     public function notifierDevalidationFichesIntegration(ListeAlimentation $liste)
     {
-        $subject = 'SIGNAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Dévalidation des fiches d'intégration du Ministère ".$liste->getMinistere()->getLibelleCourt();
+        $subject = 'SIGNSCHOOLAC : Campagne "'.$liste->getCampagne()->getTypeCampagneImpression()."\" : Dévalidation des fiches d'intégration du Ministère ".$liste->getMinistere()->getLibelleCourt();
 
         $template = 'Mail/DEVALIDATION/devalidation_fiches_integration.html.twig';
 
