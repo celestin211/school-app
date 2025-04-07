@@ -68,7 +68,7 @@ class SchoolMailService
     public function notifierTerminerCampagne(Campagne $campagne, Utilisateur $utilisateur)
     {
         // Notifier tous les utilisateur sauf l'acteur
-        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Terminée';
+        $subject = 'SCHOOL : SCHOOL  "'.$campagne->getTypeCampagneImpressionLong().'" : Terminée';
         $template = 'Mail/Campagne/TERMINEE/notification_min.html.twig';
 
         $this->notifierActifsSaufAdminEtActeur($campagne, $utilisateur, $subject, $template);
@@ -78,7 +78,7 @@ class SchoolMailService
     public function notifierCloturerCampagne(Campagne $campagne)
     {
         // Notifier tous les utilisateur sauf l'acteur
-        $subject = 'SCHOOL : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Clôturée';
+        $subject = 'SCHOOL : SCHOOL  "'.$campagne->getTypeCampagneImpressionLong().'" : Clôturée';
         $template = 'Mail/Campagne/CLOTUREE/notification_min.html.twig';
 
         $utilisateurs = $this->utilisateurRepository->findUtilisateurs(['ROLE_DGAFP', 'ROLE_MIN', 'ROLE_MIN_VAL']);
@@ -110,7 +110,7 @@ class SchoolMailService
             }
 
             $body = $this->templating->render($template, [
-                    'campagne' => $campagne,
+                    'SCHOOL ' => $campagne,
                     'utilisateur' => $utilisateur,
                 ]);
             $this->sendMessage($utilisateur, $subject, $body);
@@ -130,7 +130,7 @@ class SchoolMailService
             }
 
             $body = $this->templating->render($template, [
-                'campagne' => $campagne,
+                'SCHOOL ' => $campagne,
                 'utilisateur' => $utilisateur,
             ]);
             $this->sendMessage($utilisateur, $subject, $body, $piecesJointesDocument);
@@ -140,8 +140,8 @@ class SchoolMailService
     // $utilisateur: celui qui fait l'action
     public function notifierModifierCampagne(Campagne $campagne, Utilisateur $acteur)
     {
-        $subject = 'SIGNAC : Campagne "'.$campagne->getTypeCampagneImpressionLong().'" : Modification';
-        $template = 'Mail/Campagne/MODIFIEE/notification_min.html.twig';
+        $subject = 'SCHOOL  : SCHOOL  "'.$campagne->getTypeCampagneImpressionLong().'" : Modification';
+        $template = 'Mail/SCHOOL /MODIFIEE/notification_min.html.twig';
 
         $this->notifierActifsSaufAdminEtActeur($campagne, $acteur, $subject, $template);
     }
