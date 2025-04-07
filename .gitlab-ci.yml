@@ -2,7 +2,7 @@ image: int.registry.docker.school-app:5000/docker:sock
 services:
   - name: docker:dind
     alias: docker
-    command: ["--insecure-registry=http://int.registry.docker.cisirh:5000" , "--insecure-registry=http://rec.registry.docker.cisirh:5000"]
+   
 
 stages:
   - Build
