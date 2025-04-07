@@ -17,14 +17,6 @@
 * Copier toutes les archives sur le disque, dans le home (ex: C:\Users\\{username}-adc\).
 * Sélectionner toutes les archives et les décompresser en effectuant **Clic droit > 7-Zip > Extraire Ici**
 
-## Mise en place du proxy
-* Ajouter les proxy http et https dans les variables d'environnement windows :
-
-```
-HTTP_PROXY=http://{username}:{password}@172.24.13.36:8080
-HTTPS_PROXY=http://{username}:{password}@172.24.13.36:8080
-NO_PROXY=172.0.0.1,localhost
- ```
 
 ## Installation d'Oracle
 * S'assurer que la bonne version de Oracle 18c est installé. (Nécessite un compte administrateur)
