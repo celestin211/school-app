@@ -124,7 +124,7 @@ class UtilisateurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $form->get('role')->getData();
             //Todo: Créer un voter
-            $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $role);
+            $utilisateurManager->peutFaireActionAdmin($this->getUser(), $role);
             $utilisateurManager->creerUtilisateur($utilisateur, $role);
             $this->addFlash('success', 'Utilisateur "'.$utilisateur->getEmail().'" créé avec succès !');
 
@@ -150,7 +150,7 @@ class UtilisateurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $form->get('role')->getData();
             //Todo: Créer un voter
-            $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $role);
+            $utilisateurManager->peutFaireActionAdmin($this->getUser(), $role);
             $utilisateurManager->creerUtilisateur($utilisateur, $role);
             $this->addFlash('success', 'Utilisateur "'.$utilisateur->getEmail().'" créé avec succès !');
 
@@ -179,7 +179,7 @@ class UtilisateurController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $form->get('role')->getData();
-            $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $role);
+            $utilisateurManager->peutFaireActionAdmin($this->getUser(), $role);
             $utilisateur->setRoles([$role]);
             $em->flush();
             $this->addFlash('success', 'Utilisateur "'.$utilisateur->getEmail().'" mis à jour avec succès !');
@@ -198,12 +198,12 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/delete', name: 'utilisateur_delete',  methods: ['POST', 'DELETE'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
         $roleUtilisateurASupprimer = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurASupprimer);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurASupprimer);
 
         $form = $this->createDeleteForm($utilisateur);
         $form->handleRequest($request);
@@ -247,7 +247,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/activerEtRedefinirPassword', name: 'utilisateur_activer_redefinir_password')]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function activerEtRedefinirPassword(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager)
     {
         $this->denyAccessUnlessGranted(UtilisateurVoter::ACTIVER_ET_REDEFINIR_MOT_DE_PASSE);
@@ -272,12 +272,12 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/enable', name: 'utilisateur_enable', methods: ['POST', 'PUT'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function enable(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
         $roleUtilisateurAActiver = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurAActiver);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurAActiver);
 
         $form = $this->createEnableForm($utilisateur->getId());
         $form->handleRequest($request);
@@ -300,12 +300,12 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/disable', name: 'utilisateur_disable', methods: ['POST', 'PUT'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function disable(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
         $roleUtilisateurADesactiver = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurADesactiver);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurADesactiver);
 
         $form = $this->createDisableForm($utilisateur->getId());
         $form->handleRequest($request);
@@ -328,12 +328,12 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/{id}/unlock', name: 'utilisateur_unlock', methods: ['POST', 'PUT'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function unlock(Request $request, Utilisateur $utilisateur, UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         //Voter
         $roleUtilisateurADebloquer = $utilisateur->getRoles()[0];
-        $utilisateurManager->peutFaireActionDGAFP($this->getUser(), $roleUtilisateurADebloquer);
+        $utilisateurManager->peutFaireActionAdmin($this->getUser(), $roleUtilisateurADebloquer);
 
         $form = $this->createUnlockForm($utilisateur->getId());
         $form->handleRequest($request);
@@ -426,7 +426,7 @@ class UtilisateurController extends AbstractController
      *
      */
     #[Route(path: '/télécharger', name: 'utilisateurs_extract', methods: ['GET'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function extractUsers(UtilisateurManager $utilisateurManager, EntityManagerInterface $em)
     {
         $utilisateurs = $em->getRepository(Utilisateur::class)->getUsersSaufAdmin();
@@ -435,7 +435,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route(path: '/pagination', name: 'pagination', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_DGAFP')]
+    #[IsGranted('ROLE_ADMIN')]
     public function pagination(Request $request, UtilisateurRepository $utilisateurRepository): \Symfony\Component\HttpFoundation\JsonResponse
     {
         $draw = $request->get('draw', 1);
