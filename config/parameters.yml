@@ -10,7 +10,6 @@ parameters:
     bac.app_name: 'SCHOOL'
     app.environnement: '%env(APP_ENVIRONNEMENT)%'
     bac.app_version: 3.0.3
-    bac.maquette.nbLignesMax: 10000
     app.autocomplete: '%env(APP_AUTOCOMPLETE)%'
     bac.absolute_url : '%env(APP_ABSOLUTE_URL)%'
     bac.errors.subject: 'SCHOOL : erreur sur %env(APP_ENVIRONNEMENT)% '
