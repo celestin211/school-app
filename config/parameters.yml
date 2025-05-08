@@ -2,11 +2,9 @@
 parameters:
     locale: fr
     kernel.root_dir: '%kernel.project_dir%'
-    mailer.from_address: ne-pas-repondre@SCHOOL.fr
+    mailer.from_address: ne-pas-repondre@school.fr
     mailer.from_name: Adminstrateur SCHOOL
-    mailer.reply_address: ne-pas-repondre@SCHOOL.fr
-    # Durée en secondes pendant laquelle le navigateur garde la session si la case "Se souvenir de moi" a été cochée par l'utilisateur
-    # 2592000 = 30 jours en secondes (garde la session ouverte meme après fermeture du navigateur)
+    mailer.reply_address: ne-pas-repondre@school.fr
     bac.se.souvenir.de.moi: '%env(int:APP_REMEBERME_LIFETIME)%'
     bac.company_name: 'SCHOOL'
     bac.app_name: 'SCHOOL'
@@ -29,10 +27,6 @@ parameters:
 
     # Taille maximale des pièces jointes chargées dans l'application (en kiloOctets), si l'on modifie ce parametre il faut modifier la valeur dans l'assert de l'entité document (valeur actuelle = 5M)
     bac.max_file_size: 5120
-
-    # bac.maquette.arretSurErreur = true => sort à la première erreur rencontrée
-    # bac.maquette.arretSurErreur = false => continue à lire le reste du fichier même s'il rencotre des erreurs
-    bac.maquette.arretSurErreur: false
 
     # Liste des Expressions Reguliers de validation de contenu dans les maquettes
 
